@@ -19,13 +19,13 @@
 
 <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%;">
     {{-- Portada --}}
-    <div style="position: relative; aspect-ratio: 16 / 9; border-radius: 0.75rem; overflow: hidden; background: {{ $fondo }};">
+    <div style="position: relative; aspect-ratio: 16 / 9; max-height: 11rem; width: 100%; border-radius: 0.75rem; overflow: hidden; background: {{ $fondo }};">
         @if ($curso->portada)
             <img src="{{ Storage::disk('public')->url($curso->portada) }}" alt="Portada de {{ $curso->nombre }}"
                  style="width: 100%; height: 100%; object-fit: cover;">
         @else
             <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.9);">
-                <x-filament::icon icon="heroicon-o-academic-cap" style="width: 3.5rem; height: 3.5rem;" />
+                <x-filament::icon icon="heroicon-o-academic-cap" style="width: 2.75rem; height: 2.75rem;" />
             </div>
         @endif
 

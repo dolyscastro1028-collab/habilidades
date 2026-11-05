@@ -7,6 +7,7 @@ use App\Models\Curso;
 use Filament\Actions\Action;
 use Filament\Actions\ViewAction;
 use Filament\Notifications\Notification;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Table;
 
@@ -27,9 +28,12 @@ class CursosTable
             ->searchable(['nombre', 'materia'])
             ->searchPlaceholder('Buscar por nombre o temática')
             ->paginated([12, 24])
+            // Stack activa el modo tarjetas de Filament (sin él, contentGrid se ignora y sale una tabla)
             ->columns([
-                ViewColumn::make('tarjeta')
-                    ->view('filament.estudiante.tarjeta-curso'),
+                Stack::make([
+                    ViewColumn::make('tarjeta')
+                        ->view('filament.estudiante.tarjeta-curso'),
+                ]),
             ])
             // Clic en la tarjeta: entra al curso si está inscrito
             ->recordUrl(fn (Curso $record) => $inscrito($record) ? CursoResource::getUrl('view', ['record' => $record]) : null)
