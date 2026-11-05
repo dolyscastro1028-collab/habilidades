@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Evidencias – Plan de Mejoramiento – Plataforma para aprender habilidades</title>
+<style>
+    @page { size: A4; margin: 16mm 14mm; }
+    * { box-sizing: border-box; }
+    body { font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: #1f1a24; font-size: 10.5pt; line-height: 1.45; margin: 0; }
+    h1 { font-size: 22pt; margin: 0 0 4pt; color: #6d28d9; }
+    h2 { font-size: 15pt; color: #6d28d9; border-bottom: 2px solid #ede9fe; padding-bottom: 4pt; margin: 0 0 10pt; }
+    h3 { font-size: 11.5pt; margin: 14pt 0 6pt; color: #3b0764; }
+    p { margin: 0 0 8pt; }
+    .seccion { break-before: page; }
+    .portada { height: 255mm; display: flex; flex-direction: column; justify-content: center; }
+    .portada .sub { font-size: 13pt; color: #555; margin-bottom: 18pt; }
+    .franja { height: 6px; width: 120px; border-radius: 3px; background: linear-gradient(90deg, #db2777, #7c3aed); margin: 14pt 0; }
+    table { width: 100%; border-collapse: collapse; margin: 6pt 0 10pt; font-size: 9.5pt; }
+    th, td { border: 1px solid #ddd6e8; padding: 4pt 6pt; text-align: left; vertical-align: top; }
+    th { background: #f5f3ff; color: #3b0764; }
+    tr { break-inside: avoid; }
+    .datos td:first-child { width: 38%; font-weight: 600; background: #faf8ff; }
+    .ok { color: #15803d; font-weight: 700; white-space: nowrap; }
+    .diagrama { border: 1px solid #ede9fe; border-radius: 8px; padding: 8pt; margin: 6pt 0 10pt; break-inside: avoid; text-align: center; }
+    .diagrama svg { max-width: 100%; height: auto; }
+    /* el diagrama relacional es alto: que quepa en una hoja A4 */
+    .diagrama.er svg { max-height: 225mm; width: auto !important; }
+    .captura { break-inside: avoid; margin: 0 0 14pt; }
+    .captura img { width: 100%; border: 1px solid #ddd6e8; border-radius: 6px; }
+    .captura p { font-size: 9.5pt; color: #444; margin: 4pt 0 0; }
+    .nota { font-size: 9pt; color: #555; }
+    code { font-family: ui-monospace, Menlo, monospace; font-size: 9pt; background: #f5f3ff; padding: 0 3px; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- ───────────────────────── PORTADA ───────────────────────── -->
+<section class="portada">
+    <p style="color:#6d28d9; font-weight:700; letter-spacing:.05em;">SENA – PLAN DE MEJORAMIENTO – GRUPO 2</p>
+    <h1>Plataforma para aprender habilidades</h1>
+    <p class="sub">Evidencias: diagrama relacional, mapa de navegación, pruebas y capturas de pantalla</p>
+    <div class="franja"></div>
+    <table class="datos">
+        <tr><td>Aprendiz</td><td>Ashlee Alejandra Ramírez Castro – TI 1046705672</td></tr>
+        <tr><td>Programa de formación</td><td>Técnico en Programación de Software (Código 228120, versión 102)</td></tr>
+        <tr><td>Número de ficha</td><td>3171240</td></tr>
+        <tr><td>Institución educativa</td><td>Institución Educativa Benedikta Zur Nieden</td></tr>
+        <tr><td>Centro de formación</td><td>Centro Tecnológico Del Mobiliario</td></tr>
+        <tr><td>Instructor</td><td>Jorge Hernández S.</td></tr>
+        <tr><td>Competencia</td><td>220501007 – Construir el sistema que cumpla con los requisitos de la solución informática</td></tr>
+        <tr><td>Tecnologías</td><td>PHP 8.3 · Laravel 13 · Filament 5 · MySQL</td></tr>
+    </table>
+</section>
+
+<!-- ───────────────────────── 1. DIAGRAMA ───────────────────────── -->
+<section class="seccion">
+    <h2>1. Diagrama relacional de la base de datos</h2>
+    <p>La base de datos <code>habilidades</code> tiene 9 tablas propias del sistema, relacionadas con llaves foráneas.
+       <strong>PK</strong> = llave primaria, <strong>FK</strong> = llave foránea, <strong>UK</strong> = valor único.</p>
+
+    <div class="diagrama er">
+<pre class="mermaid">
+erDiagram
+    roles ||--o{ users : "tiene"
+    users ||--o| estudiantes : "es"
+    users ||--o| profesores : "es"
+    profesores ||--o{ cursos : "dicta"
+    cursos ||--o{ modulos : "contiene"
+    modulos ||--o{ lecciones : "contiene"
+    estudiantes ||--o{ clases : "se inscribe"
+    cursos ||--o{ clases : "recibe"
+    estudiantes ||--o{ progreso : "completa"
+    lecciones ||--o{ progreso : "es completada"
+
+    roles {
+        bigint id PK
+        varchar nombre UK "admin, profesor, estudiante"
+    }
+    users {
+        bigint id PK
+        varchar name
+        varchar email UK
+        varchar password
+        bigint role_id FK
+    }
+    estudiantes {
+        bigint id PK
+        bigint user_id FK,UK
+        varchar identificacion UK
+        tinyint edad
+    }
+    profesores {
+        bigint id PK
+        bigint user_id FK,UK
+        varchar identificacion UK
+        tinyint edad
+        varchar materia
+    }
+    cursos {
+        bigint id PK
+        varchar nombre
+        varchar duracion
+        varchar materia "temática"
+        varchar portada
+        bigint profesor_id FK
+    }
+    modulos {
+        bigint id PK
+        bigint curso_id FK
+        varchar titulo
+        int orden
+    }
+    lecciones {
+        bigint id PK
+        bigint modulo_id FK
+        varchar titulo
+        longtext contenido
+        varchar video_url
+        varchar video_archivo
+        int orden
+    }
+    clases {
+        bigint id PK
+        bigint curso_id FK
+        bigint estudiante_id FK
+        timestamp created_at "fecha de inscripción"
+    }
+    progreso {
+        bigint id PK
+        bigint estudiante_id FK
+        bigint leccion_id FK
+        timestamp created_at "fecha en que la completó"
+    }
+</pre>
+    </div>
+
+    <h3 style="break-before: page;">Normalización</h3>
+    <table>
+        <tr><th>Forma normal</th><th>Cómo se cumple</th></tr>
+        <tr><td>1FN</td><td>Cada columna guarda un solo valor. Los módulos, lecciones, inscripciones y avances van en tablas propias, no en listas dentro de una columna.</td></tr>
+        <tr><td>2FN</td><td>Las tablas intermedias <code>clases</code> y <code>progreso</code> solo guardan las llaves de la relación y su fecha; no repiten datos del curso, del estudiante ni de la lección.</td></tr>
+        <tr><td>3FN</td><td>El nombre, el correo y la contraseña están solo en <code>users</code>. <code>estudiantes</code> y <code>profesores</code> los consultan por <code>user_id</code>. El rol está en <code>roles</code> y se referencia por <code>role_id</code>.</td></tr>
+    </table>
+
+    <h3>Reglas de integridad</h3>
+    <table>
+        <tr><th>Regla</th><th>Efecto</th></tr>
+        <tr><td>UNIQUE (<code>curso_id</code>, <code>estudiante_id</code>) en <code>clases</code></td><td>Un estudiante no se puede inscribir dos veces en el mismo curso.</td></tr>
+        <tr><td>UNIQUE (<code>estudiante_id</code>, <code>leccion_id</code>) en <code>progreso</code></td><td>Una lección solo cuenta una vez como completada.</td></tr>
+        <tr><td>ON DELETE CASCADE en módulos, lecciones, clases y progreso</td><td>Al borrar un curso se borran sus módulos, lecciones, inscripciones y avances.</td></tr>
+        <tr><td>ON DELETE RESTRICT en <code>users.role_id</code></td><td>No se puede borrar un rol que tenga usuarios.</td></tr>
+    </table>
+    <p class="nota">El avance se calcula así: lecciones completadas del curso ÷ total de lecciones del curso × 100. El script con la estructura y los datos de prueba está en <code>database/habilidades.sql</code>.</p>
+</section>
+
+<!-- ───────────────────────── 2. MAPA DE NAVEGACIÓN ───────────────────────── -->
+<section class="seccion">
+    <h2>2. Mapa de navegación por rol</h2>
+    <p>Cada rol tiene su propio panel. Un usuario solo puede entrar al panel que corresponde a su rol.</p>
+
+    <h3>Página de inicio pública ( / )</h3>
+    <div class="diagrama">
+<pre class="mermaid">
+flowchart LR
+    I["Página de inicio<br/>cursos destacados"] --> LE["Ingreso estudiante<br/>/estudiante/login"]
+    I --> RE["Registro estudiante<br/>/estudiante/register"]
+    I --> LP["Ingreso profesor<br/>/profesor/login"]
+    I --> LA["Ingreso administrador<br/>/admin/login"]
+    RE --> LE
+</pre>
+    </div>
+
+    <h3>Administrador ( /admin )</h3>
+    <div class="diagrama">
+<pre class="mermaid">
+flowchart LR
+    A0["Escritorio<br/>resumen y cursos populares"] --> C["Cursos<br/>listado"]
+    A0 --> E["Estudiantes<br/>listado"]
+    A0 --> P["Profesores<br/>listado"]
+    C --> C1["Crear curso"]
+    C --> C2["Editar curso"]
+    C2 --> M["Módulos y lecciones<br/>agregar, editar, ordenar, borrar"]
+    C2 --> G["Estudiantes inscritos<br/>y progreso"]
+    E --> E1["Crear / editar estudiante<br/>con cuenta de acceso"]
+    P --> P1["Crear / editar profesor<br/>con cuenta de acceso"]
+</pre>
+    </div>
+
+    <h3>Profesor ( /profesor )</h3>
+    <div class="diagrama">
+<pre class="mermaid">
+flowchart LR
+    R0["Escritorio"] --> R1["Mis cursos<br/>solo los propios"]
+    R1 --> R2["Crear curso"]
+    R1 --> R3["Editar curso"]
+    R3 --> R4["Módulos y lecciones"]
+    R3 --> R5["Estudiantes inscritos<br/>y progreso"]
+</pre>
+    </div>
+
+    <h3>Estudiante ( /estudiante )</h3>
+    <div class="diagrama">
+<pre class="mermaid">
+flowchart LR
+    S0["Escritorio<br/>mis cursos con avance"] -->|Continuar / Empezar| L["Lección<br/>video, contenido, temario"]
+    S0 --> K["Cursos disponibles<br/>pestaña Catálogo"]
+    K --> K2["Pestaña Mis cursos"]
+    K -->|Inscribirme| K2
+    K2 -->|Ver contenido| V["Curso<br/>módulos y lecciones"]
+    V --> L
+    L -->|Marcar como completada| L
+    L -->|Anterior / Siguiente| L
+</pre>
+    </div>
+</section>
+
+<!-- ───────────────────────── 3. PRUEBAS ───────────────────────── -->
+<section class="seccion">
+    <h2>3. Tabla de pruebas</h2>
+    <p>Pruebas de cada funcionalidad. Se ejecutaron sobre los datos de prueba del proyecto: un administrador, un profesor, tres estudiantes y dos cursos.</p>
+    <table>
+        <tr><th style="width:5%">N.°</th><th style="width:30%">Caso de prueba</th><th style="width:38%">Resultado esperado</th><th style="width:27%">Resultado obtenido</th></tr>
+
+        <tr><th colspan="4">Registro, inicio de sesión y roles</th></tr>
+        <tr><td>1</td><td>Un estudiante nuevo se registra en <code>/estudiante/register</code>.</td><td>Se crea su cuenta con rol estudiante y su registro en <code>estudiantes</code>.</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>2</td><td>Un estudiante intenta entrar a <code>/admin</code> y <code>/profesor</code>.</td><td>El sistema le niega el acceso (403). Solo entra a <code>/estudiante</code>.</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>3</td><td>El usuario pulsa <em>Salir</em>.</td><td>Se cierra la sesión y, al volver al panel, pide iniciar sesión.</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>4</td><td>Alguien abre <code>/profesor/register</code>.</td><td>No existe (404): las cuentas de profesor solo las crea el administrador.</td><td class="ok">Cumple ✓</td></tr>
+
+        <tr><th colspan="4">Gestión de cursos (administrador)</th></tr>
+        <tr><td>5</td><td>El administrador crea el curso "Word básico" con temática, duración y profesor.</td><td>El curso queda guardado y aparece en la lista.</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>6</td><td>Agrega el módulo "Formato de texto" con una lección y su video.</td><td>Se guardan el módulo y la lección, y el módulo queda al final del orden.</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>7</td><td>Intenta guardar una lección sin video.</td><td>El formulario muestra un error y no guarda nada.</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>8</td><td>Elimina un curso.</td><td>Se borran también sus módulos, lecciones e inscripciones.</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>9</td><td>Busca cursos por el nombre del profesor.</td><td>La lista muestra solo los cursos de ese profesor.</td><td class="ok">Cumple ✓</td></tr>
+
+        <tr><th colspan="4">Gestión de usuarios (administrador)</th></tr>
+        <tr><td>10</td><td>Crea un estudiante con correo y contraseña, inscrito en un curso.</td><td>Se crean la cuenta (rol estudiante), el estudiante y la inscripción, y puede iniciar sesión.</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>11</td><td>Crea un profesor con correo y contraseña.</td><td>Se crean la cuenta (rol profesor) y el profesor.</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>12</td><td>Crea un estudiante con un correo que ya existe.</td><td>El formulario muestra un error en el correo.</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>13</td><td>Edita el nombre de un estudiante y deja la contraseña vacía.</td><td>Se actualiza el nombre y se conserva la contraseña.</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>14</td><td>Elimina un estudiante.</td><td>También se elimina su cuenta de acceso.</td><td class="ok">Cumple ✓</td></tr>
+
+        <tr><th colspan="4">Profesor</th></tr>
+        <tr><td>15</td><td>El profesor entra a <em>Mis cursos</em>.</td><td>Solo ve sus cursos; el curso de otro profesor no aparece y su URL da 404.</td><td class="ok">Cumple ✓</td></tr>
+
+        <tr><th colspan="4">Inscripción a cursos (estudiante)</th></tr>
+        <tr><td>16</td><td>El estudiante ve el catálogo y busca "Ofimática".</td><td>Aparecen los cursos en tarjetas y la búsqueda deja solo "Excel básico".</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>17</td><td>Pulsa <em>Inscribirme</em> en "Excel básico".</td><td>Se guarda la inscripción en <code>clases</code> y el curso aparece en <em>Mis cursos</em>.</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>18</td><td>Pulsa <em>Retirarme</em>.</td><td>Se borra la inscripción.</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>19</td><td>Un estudiante no inscrito abre la URL de una lección.</td><td>El sistema le niega el acceso (403).</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>20</td><td>Abre una lección con la URL de otro curso.</td><td>No la encuentra (404).</td><td class="ok">Cumple ✓</td></tr>
+
+        <tr><th colspan="4">Desarrollo de lecciones y progreso</th></tr>
+        <tr><td>21</td><td>El estudiante inscrito abre la lección "Introducción a las fórmulas".</td><td>Se ve el video de YouTube dentro de la página, el contenido y el temario con los dos módulos.</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>22</td><td>Pulsa <em>Marcar como completada</em>.</td><td>Se guarda en <code>progreso</code>, aparece "Lección completada" y sale confeti.</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>23</td><td>Completa una por una las 4 lecciones de Excel.</td><td>El avance sube 0 % → 25 % → 50 % → 75 % → 100 %.</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>24</td><td>Completa la última lección del curso.</td><td>Muestra "¡Felicitaciones! Terminaste el curso".</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>25</td><td>Entra a su escritorio con un curso al 50 %.</td><td>Ve la tarjeta del curso con la barra al 50 % y el botón <em>Continuar</em> lleva a la siguiente lección pendiente.</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>26</td><td>El administrador abre <em>Estudiantes inscritos y progreso</em> de "Excel básico".</td><td>Laura Gómez: 2 de 4 (50 %). Andrés Ruiz: 0 de 4 (0 %).</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>27</td><td>El administrador abre su escritorio.</td><td>Ve los totales de cursos, estudiantes, inscripciones y el avance promedio (17 %).</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>28</td><td>Se calcula el avance de un curso sin lecciones.</td><td>Muestra 0 % sin generar error.</td><td class="ok">Cumple ✓</td></tr>
+    </table>
+</section>
+
+<!-- ───────────────────────── 4. CAPTURAS ───────────────────────── -->
+<section class="seccion">
+    <h2>4. Capturas de pantalla</h2>
+
+    <div class="captura"><img src="capturas/01-inicio.png" alt=""><p><strong>Página de inicio.</strong> Presenta la plataforma, los cursos destacados y los accesos por rol.</p></div>
+    <div class="captura"><img src="capturas/02-registro-estudiante.png" alt=""><p><strong>Registro de estudiante.</strong> Nombre, identificación, edad, correo y contraseña.</p></div>
+    <div class="captura"><img src="capturas/03-admin-escritorio.png" alt=""><p><strong>Escritorio del administrador.</strong> Resumen de la plataforma y cursos más populares.</p></div>
+    <div class="captura"><img src="capturas/04-admin-cursos.png" alt=""><p><strong>Cursos (administrador).</strong> Listado con temática, profesor, módulos y lecciones.</p></div>
+    <div class="captura"><img src="capturas/05-admin-editar-curso.png" alt=""><p><strong>Editar curso.</strong> Datos del curso y sus módulos; cada módulo contiene sus lecciones con video.</p></div>
+    <div class="captura"><img src="capturas/12-admin-progreso-inscritos.png" alt=""><p><strong>Progreso de los inscritos.</strong> Lecciones completadas y porcentaje de avance de cada estudiante.</p></div>
+    <div class="captura"><img src="capturas/06-admin-crear-estudiante.png" alt=""><p><strong>Crear estudiante (administrador).</strong> Incluye la cuenta de acceso para iniciar sesión.</p></div>
+    <div class="captura"><img src="capturas/11-profesor-cursos.png" alt=""><p><strong>Panel del profesor.</strong> El profesor solo ve y gestiona sus propios cursos.</p></div>
+    <div class="captura"><img src="capturas/07-estudiante-escritorio.png" alt=""><p><strong>Escritorio del estudiante.</strong> Sus cursos con barra de avance y botón para continuar.</p></div>
+    <div class="captura"><img src="capturas/08-estudiante-catalogo.png" alt=""><p><strong>Catálogo de cursos.</strong> Tarjetas con temática, profesor, módulos, lecciones, duración y avance.</p></div>
+    <div class="captura"><img src="capturas/09-estudiante-curso.png" alt=""><p><strong>Vista del curso.</strong> Módulos y lecciones, con las completadas marcadas.</p></div>
+    <div class="captura"><img src="capturas/10-estudiante-leccion.png" alt=""><p><strong>Lección.</strong> Video, botón de completar, navegación y temario con el avance del curso.</p></div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+<script>
+    mermaid.initialize({ startOnLoad: true, theme: 'base', securityLevel: 'strict',
+        themeVariables: { primaryColor: '#f5f3ff', primaryBorderColor: '#7c3aed', primaryTextColor: '#1f1a24', lineColor: '#7c3aed', fontSize: '13px' },
+        er: { useMaxWidth: true }, flowchart: { useMaxWidth: true } });
+</script>
+</body>
+</html>

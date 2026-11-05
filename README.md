@@ -127,3 +127,12 @@ El porcentaje de avance se calcula como *lecciones completadas del curso ÷ tota
 4. **Ver contenido** → abrir la lección, reproducir el video y pulsar **Marcar como completada**.
 5. El avance aparece en **Mi progreso** (estudiante) y en **Estudiantes inscritos y progreso** (admin, al editar el curso).
 6. En MySQL, revisar las tablas `users`, `estudiantes`, `cursos`, `modulos`, `lecciones`, `clases` y `progreso`.
+
+## Evidencias del plan de mejoramiento
+
+En la carpeta [`docs/`](docs):
+
+- [`Evidencias_Plan_Mejoramiento_Grupo2.pdf`](docs/Evidencias_Plan_Mejoramiento_Grupo2.pdf): diagrama relacional, normalización, mapa de navegación por rol, tabla de pruebas y capturas de pantalla.
+- [`evidencias.html`](docs/evidencias.html): el mismo documento en HTML (se abre en el navegador).
+- [`capturas/`](docs/capturas): capturas de pantalla de cada panel.
+- [`database/habilidades.sql`](database/habilidades.sql): script SQL con la estructura y los datos de prueba.
