@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Cursos\Tables;
 
+use App\Filament\Resources\Cursos\PublicacionCurso;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -18,6 +19,7 @@ class CursosTable
             ->columns([
                 TextColumn::make('nombre')
                     ->searchable(),
+                PublicacionCurso::columna(),
                 TextColumn::make('tematica.nombre')
                     ->label('Temática')
                     ->badge()
@@ -45,11 +47,13 @@ class CursosTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                PublicacionCurso::filtro(),
                 SelectFilter::make('tematica')
                     ->label('Temática')
                     ->relationship('tematica', 'nombre'),
             ])
             ->recordActions([
+                ...PublicacionCurso::acciones(),
                 EditAction::make(),
                 DeleteAction::make(),
             ])

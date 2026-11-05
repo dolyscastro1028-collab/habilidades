@@ -76,6 +76,7 @@ class DatabaseSeeder extends Seeder
             $curso = Curso::create([
                 'nombre' => $nombre,
                 'tematica_id' => $tematicas[$tematica],
+                'publicado' => true,
                 'descripcion' => $descripcion,
                 'duracion' => $duracion,
                 'profesor_id' => $profesor->id,
@@ -98,8 +99,19 @@ class DatabaseSeeder extends Seeder
             }
         }
 
+        // Curso en borrador: aún no tiene lecciones, así que no se puede publicar
+        // y los estudiantes no lo ven en el catálogo
+        Curso::create([
+            'nombre' => 'Diseño con Canva',
+            'tematica_id' => $tematicas['Diseño gráfico'],
+            'duracion' => '12 horas',
+            'descripcion' => 'Crea presentaciones, afiches y publicaciones para redes sociales con Canva.',
+            'profesor_id' => $profesor->id,
+            'publicado' => false,
+        ])->modulos()->create(['titulo' => 'Primeros pasos', 'orden' => 1]);
+
         // ── Inscripciones y progreso de ejemplo ──────────────────────────
-        [$excel, $python] = Curso::orderBy('id')->get();
+        [$excel, $python] = Curso::orderBy('id')->take(2)->get();
         [$laura, $andres] = $estudiantes;
 
         $laura->cursos()->attach([$excel->id, $python->id]);

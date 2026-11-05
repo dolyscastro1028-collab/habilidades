@@ -2,6 +2,7 @@
 
 namespace App\Filament\Profesor\Resources\Cursos\Schemas;
 
+use App\Filament\Resources\Cursos\PublicacionCurso;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -50,6 +51,8 @@ class CursoForm
                     ->directory('portadas')
                     ->maxSize(4096)
                     ->columnSpanFull(),
+
+                PublicacionCurso::interruptor(),
             ]);
     }
 }

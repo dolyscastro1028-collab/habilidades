@@ -54,9 +54,10 @@ class CursosTable
                     ->color('success')
                     ->requiresConfirmation()
                     ->modalHeading('¿Inscribirte en este curso?')
-                    ->visible(fn (Curso $record) => ! $inscrito($record))
+                    ->visible(fn (Curso $record) => $record->publicado && ! $inscrito($record))
                     ->action(function (Curso $record) {
-                        $record->estudiantes()->attach(auth()->user()->estudiante->id);
+                        abort_unless($record->publicado, 403); // los borradores no aceptan inscripciones
+                        $record->estudiantes()->syncWithoutDetaching(auth()->user()->estudiante->id);
 
                         Notification::make()
                             ->title('Te inscribiste en ' . $record->nombre)

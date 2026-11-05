@@ -14,6 +14,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class CursoResource extends Resource
@@ -27,6 +28,17 @@ class CursoResource extends Resource
     protected static ?string $modelLabel = 'curso';
 
     protected static ?string $pluralModelLabel = 'cursos disponibles';
+
+    // El estudiante ve los cursos publicados y, además, los que ya tiene inscritos
+    // (si un curso inscrito vuelve a borrador, no pierde el acceso ni su avance)
+    public static function getEloquentQuery(): Builder
+    {
+        $estudianteId = auth()->user()->estudiante?->id;
+
+        return parent::getEloquentQuery()->where(fn (Builder $q) => $q
+            ->where('publicado', true)
+            ->orWhereHas('estudiantes', fn (Builder $e) => $e->whereKey($estudianteId)));
+    }
 
     public static function canCreate(): bool
     {

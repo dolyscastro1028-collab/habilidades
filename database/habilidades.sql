@@ -60,7 +60,7 @@ CREATE TABLE `clases` (
 
 LOCK TABLES `clases` WRITE;
 /*!40000 ALTER TABLE `clases` DISABLE KEYS */;
-INSERT INTO `clases` VALUES (1,1,1,'2026-11-06 02:27:19','2026-11-06 02:27:19'),(2,2,1,'2026-11-06 02:27:19','2026-11-06 02:27:19'),(3,1,2,'2026-11-06 02:27:19','2026-11-06 02:27:19');
+INSERT INTO `clases` VALUES (1,1,1,'2026-11-06 02:36:29','2026-11-06 02:36:29'),(2,2,1,'2026-11-06 02:36:29','2026-11-06 02:36:29'),(3,1,2,'2026-11-06 02:36:29','2026-11-06 02:36:29');
 /*!40000 ALTER TABLE `clases` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `cursos`;
@@ -73,6 +73,7 @@ CREATE TABLE `cursos` (
   `descripcion` text COLLATE utf8mb4_unicode_ci,
   `tematica_id` bigint unsigned NOT NULL,
   `portada` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `publicado` tinyint(1) NOT NULL DEFAULT '0',
   `profesor_id` bigint unsigned NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -81,12 +82,12 @@ CREATE TABLE `cursos` (
   KEY `cursos_profesor_id_foreign` (`profesor_id`),
   CONSTRAINT `cursos_profesor_id_foreign` FOREIGN KEY (`profesor_id`) REFERENCES `profesores` (`id`) ON DELETE CASCADE,
   CONSTRAINT `cursos_tematica_id_foreign` FOREIGN KEY (`tematica_id`) REFERENCES `tematicas` (`id`) ON DELETE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `cursos` WRITE;
 /*!40000 ALTER TABLE `cursos` DISABLE KEYS */;
-INSERT INTO `cursos` VALUES (1,'Excel básico','20 horas','Aprende a usar Excel desde cero: escribe fórmulas, usa funciones como SUMA y PROMEDIO y presenta tus datos con gráficos claros.',1,NULL,1,'2026-11-06 02:27:19','2026-11-06 02:27:19'),(2,'Programación con Python','30 horas','Da tus primeros pasos en programación con Python: variables, entrada y salida de datos, condicionales y ciclos con ejemplos prácticos.',2,NULL,1,'2026-11-06 02:27:19','2026-11-06 02:27:19');
+INSERT INTO `cursos` VALUES (1,'Excel básico','20 horas','Aprende a usar Excel desde cero: escribe fórmulas, usa funciones como SUMA y PROMEDIO y presenta tus datos con gráficos claros.',1,NULL,1,1,'2026-11-06 02:36:29','2026-11-06 02:36:29'),(2,'Programación con Python','30 horas','Da tus primeros pasos en programación con Python: variables, entrada y salida de datos, condicionales y ciclos con ejemplos prácticos.',2,NULL,1,1,'2026-11-06 02:36:29','2026-11-06 02:36:29'),(3,'Diseño con Canva','12 horas','Crea presentaciones, afiches y publicaciones para redes sociales con Canva.',3,NULL,0,1,'2026-11-06 02:36:29','2026-11-06 02:36:29');
 /*!40000 ALTER TABLE `cursos` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `estudiantes`;
@@ -108,7 +109,7 @@ CREATE TABLE `estudiantes` (
 
 LOCK TABLES `estudiantes` WRITE;
 /*!40000 ALTER TABLE `estudiantes` DISABLE KEYS */;
-INSERT INTO `estudiantes` VALUES (1,3,'1001001001',16,'2026-11-06 02:27:19','2026-11-06 02:27:19'),(2,4,'1001001002',17,'2026-11-06 02:27:19','2026-11-06 02:27:19'),(3,5,'1001001003',16,'2026-11-06 02:27:19','2026-11-06 02:27:19');
+INSERT INTO `estudiantes` VALUES (1,3,'1001001001',16,'2026-11-06 02:36:29','2026-11-06 02:36:29'),(2,4,'1001001002',17,'2026-11-06 02:36:29','2026-11-06 02:36:29'),(3,5,'1001001003',16,'2026-11-06 02:36:29','2026-11-06 02:36:29');
 /*!40000 ALTER TABLE `estudiantes` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `failed_jobs`;
@@ -195,7 +196,7 @@ CREATE TABLE `lecciones` (
 
 LOCK TABLES `lecciones` WRITE;
 /*!40000 ALTER TABLE `lecciones` DISABLE KEYS */;
-INSERT INTO `lecciones` VALUES (1,1,'Introducción a las fórmulas','<p>En esta lección aprenderás: <strong>Introducción a las fórmulas</strong>.</p><p>Mira el video completo y luego marca la lección como completada.</p>','https://www.youtube.com/watch?v=9KiXJtMrmbc',NULL,1,'2026-11-06 02:27:19','2026-11-06 02:27:19'),(2,1,'Funciones SUMA y PROMEDIO','<p>En esta lección aprenderás: <strong>Funciones SUMA y PROMEDIO</strong>.</p><p>Mira el video completo y luego marca la lección como completada.</p>','https://www.youtube.com/watch?v=LW0B8hgreeo',NULL,2,'2026-11-06 02:27:19','2026-11-06 02:27:19'),(3,2,'Crear un gráfico de barras','<p>En esta lección aprenderás: <strong>Crear un gráfico de barras</strong>.</p><p>Mira el video completo y luego marca la lección como completada.</p>','https://www.youtube.com/watch?v=L5567d76dKk',NULL,1,'2026-11-06 02:27:19','2026-11-06 02:27:19'),(4,2,'Personalizar gráficos','<p>En esta lección aprenderás: <strong>Personalizar gráficos</strong>.</p><p>Mira el video completo y luego marca la lección como completada.</p>','https://www.youtube.com/watch?v=ZN_IjSk0tw8',NULL,2,'2026-11-06 02:27:19','2026-11-06 02:27:19'),(5,3,'Variables y tipos de datos','<p>En esta lección aprenderás: <strong>Variables y tipos de datos</strong>.</p><p>Mira el video completo y luego marca la lección como completada.</p>','https://www.youtube.com/watch?v=gF62RDGpW1k',NULL,1,'2026-11-06 02:27:19','2026-11-06 02:27:19'),(6,3,'Entrada y salida','<p>En esta lección aprenderás: <strong>Entrada y salida</strong>.</p><p>Mira el video completo y luego marca la lección como completada.</p>','https://www.youtube.com/watch?v=EXno9AKikDo',NULL,2,'2026-11-06 02:27:19','2026-11-06 02:27:19'),(7,4,'Condicionales if/else','<p>En esta lección aprenderás: <strong>Condicionales if/else</strong>.</p><p>Mira el video completo y luego marca la lección como completada.</p>','https://www.youtube.com/watch?v=iFBcCDDDsms',NULL,1,'2026-11-06 02:27:19','2026-11-06 02:27:19'),(8,4,'Ciclos for y while','<p>En esta lección aprenderás: <strong>Ciclos for y while</strong>.</p><p>Mira el video completo y luego marca la lección como completada.</p>','https://www.youtube.com/watch?v=PWocHp9ZpEw',NULL,2,'2026-11-06 02:27:19','2026-11-06 02:27:19');
+INSERT INTO `lecciones` VALUES (1,1,'Introducción a las fórmulas','<p>En esta lección aprenderás: <strong>Introducción a las fórmulas</strong>.</p><p>Mira el video completo y luego marca la lección como completada.</p>','https://www.youtube.com/watch?v=9KiXJtMrmbc',NULL,1,'2026-11-06 02:36:29','2026-11-06 02:36:29'),(2,1,'Funciones SUMA y PROMEDIO','<p>En esta lección aprenderás: <strong>Funciones SUMA y PROMEDIO</strong>.</p><p>Mira el video completo y luego marca la lección como completada.</p>','https://www.youtube.com/watch?v=LW0B8hgreeo',NULL,2,'2026-11-06 02:36:29','2026-11-06 02:36:29'),(3,2,'Crear un gráfico de barras','<p>En esta lección aprenderás: <strong>Crear un gráfico de barras</strong>.</p><p>Mira el video completo y luego marca la lección como completada.</p>','https://www.youtube.com/watch?v=L5567d76dKk',NULL,1,'2026-11-06 02:36:29','2026-11-06 02:36:29'),(4,2,'Personalizar gráficos','<p>En esta lección aprenderás: <strong>Personalizar gráficos</strong>.</p><p>Mira el video completo y luego marca la lección como completada.</p>','https://www.youtube.com/watch?v=ZN_IjSk0tw8',NULL,2,'2026-11-06 02:36:29','2026-11-06 02:36:29'),(5,3,'Variables y tipos de datos','<p>En esta lección aprenderás: <strong>Variables y tipos de datos</strong>.</p><p>Mira el video completo y luego marca la lección como completada.</p>','https://www.youtube.com/watch?v=gF62RDGpW1k',NULL,1,'2026-11-06 02:36:29','2026-11-06 02:36:29'),(6,3,'Entrada y salida','<p>En esta lección aprenderás: <strong>Entrada y salida</strong>.</p><p>Mira el video completo y luego marca la lección como completada.</p>','https://www.youtube.com/watch?v=EXno9AKikDo',NULL,2,'2026-11-06 02:36:29','2026-11-06 02:36:29'),(7,4,'Condicionales if/else','<p>En esta lección aprenderás: <strong>Condicionales if/else</strong>.</p><p>Mira el video completo y luego marca la lección como completada.</p>','https://www.youtube.com/watch?v=iFBcCDDDsms',NULL,1,'2026-11-06 02:36:29','2026-11-06 02:36:29'),(8,4,'Ciclos for y while','<p>En esta lección aprenderás: <strong>Ciclos for y while</strong>.</p><p>Mira el video completo y luego marca la lección como completada.</p>','https://www.youtube.com/watch?v=PWocHp9ZpEw',NULL,2,'2026-11-06 02:36:29','2026-11-06 02:36:29');
 /*!40000 ALTER TABLE `lecciones` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `migrations`;
@@ -227,12 +228,12 @@ CREATE TABLE `modulos` (
   PRIMARY KEY (`id`),
   KEY `modulos_curso_id_foreign` (`curso_id`),
   CONSTRAINT `modulos_curso_id_foreign` FOREIGN KEY (`curso_id`) REFERENCES `cursos` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `modulos` WRITE;
 /*!40000 ALTER TABLE `modulos` DISABLE KEYS */;
-INSERT INTO `modulos` VALUES (1,1,'Fórmulas',1,'2026-11-06 02:27:19','2026-11-06 02:27:19'),(2,1,'Gráficos',2,'2026-11-06 02:27:19','2026-11-06 02:27:19'),(3,2,'Fundamentos',1,'2026-11-06 02:27:19','2026-11-06 02:27:19'),(4,2,'Estructuras de control',2,'2026-11-06 02:27:19','2026-11-06 02:27:19');
+INSERT INTO `modulos` VALUES (1,1,'Fórmulas',1,'2026-11-06 02:36:29','2026-11-06 02:36:29'),(2,1,'Gráficos',2,'2026-11-06 02:36:29','2026-11-06 02:36:29'),(3,2,'Fundamentos',1,'2026-11-06 02:36:29','2026-11-06 02:36:29'),(4,2,'Estructuras de control',2,'2026-11-06 02:36:29','2026-11-06 02:36:29'),(5,3,'Primeros pasos',1,'2026-11-06 02:36:29','2026-11-06 02:36:29');
 /*!40000 ALTER TABLE `modulos` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `password_reset_tokens`;
@@ -270,7 +271,7 @@ CREATE TABLE `profesores` (
 
 LOCK TABLES `profesores` WRITE;
 /*!40000 ALTER TABLE `profesores` DISABLE KEYS */;
-INSERT INTO `profesores` VALUES (1,2,'10203040',35,'Informática','2026-11-06 02:27:19','2026-11-06 02:27:19');
+INSERT INTO `profesores` VALUES (1,2,'10203040',35,'Informática','2026-11-06 02:36:29','2026-11-06 02:36:29');
 /*!40000 ALTER TABLE `profesores` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `progreso`;
@@ -292,7 +293,7 @@ CREATE TABLE `progreso` (
 
 LOCK TABLES `progreso` WRITE;
 /*!40000 ALTER TABLE `progreso` DISABLE KEYS */;
-INSERT INTO `progreso` VALUES (1,1,1,'2026-11-01 02:27:19','2026-11-01 02:27:19'),(2,1,2,'2026-11-04 02:27:19','2026-11-04 02:27:19');
+INSERT INTO `progreso` VALUES (1,1,1,'2026-11-01 02:36:29','2026-11-01 02:36:29'),(2,1,2,'2026-11-04 02:36:29','2026-11-04 02:36:29');
 /*!40000 ALTER TABLE `progreso` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `roles`;
@@ -310,7 +311,7 @@ CREATE TABLE `roles` (
 
 LOCK TABLES `roles` WRITE;
 /*!40000 ALTER TABLE `roles` DISABLE KEYS */;
-INSERT INTO `roles` VALUES (1,'admin','2026-11-06 02:27:18','2026-11-06 02:27:18'),(2,'profesor','2026-11-06 02:27:18','2026-11-06 02:27:18'),(3,'estudiante','2026-11-06 02:27:18','2026-11-06 02:27:18');
+INSERT INTO `roles` VALUES (1,'admin','2026-11-06 02:36:29','2026-11-06 02:36:29'),(2,'profesor','2026-11-06 02:36:29','2026-11-06 02:36:29'),(3,'estudiante','2026-11-06 02:36:29','2026-11-06 02:36:29');
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `sessions`;
@@ -348,7 +349,7 @@ CREATE TABLE `tematicas` (
 
 LOCK TABLES `tematicas` WRITE;
 /*!40000 ALTER TABLE `tematicas` DISABLE KEYS */;
-INSERT INTO `tematicas` VALUES (1,'Ofimática','2026-11-06 02:27:19','2026-11-06 02:27:19'),(2,'Programación','2026-11-06 02:27:19','2026-11-06 02:27:19'),(3,'Diseño gráfico','2026-11-06 02:27:19','2026-11-06 02:27:19'),(4,'Idiomas','2026-11-06 02:27:19','2026-11-06 02:27:19');
+INSERT INTO `tematicas` VALUES (1,'Ofimática','2026-11-06 02:36:29','2026-11-06 02:36:29'),(2,'Programación','2026-11-06 02:36:29','2026-11-06 02:36:29'),(3,'Diseño gráfico','2026-11-06 02:36:29','2026-11-06 02:36:29'),(4,'Idiomas','2026-11-06 02:36:29','2026-11-06 02:36:29');
 /*!40000 ALTER TABLE `tematicas` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `users`;
@@ -373,7 +374,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Administrador','admin@plataforma.com','2026-11-06 02:27:18','$2y$12$rOsPqVn/xWjPr8WLPNQ.He.0Ydd./aJjv171.j/2et.Y0gLaaNuaW','VEJqVUIT42','2026-11-06 02:27:19','2026-11-06 02:27:19',1),(2,'Carlos Pérez','profesor@plataforma.com','2026-11-06 02:27:19','$2y$12$rOsPqVn/xWjPr8WLPNQ.He.0Ydd./aJjv171.j/2et.Y0gLaaNuaW','JLyhjapmmk','2026-11-06 02:27:19','2026-11-06 02:27:19',2),(3,'Laura Gómez','laura@plataforma.com','2026-11-06 02:27:19','$2y$12$rOsPqVn/xWjPr8WLPNQ.He.0Ydd./aJjv171.j/2et.Y0gLaaNuaW','NqKTUD3kRD','2026-11-06 02:27:19','2026-11-06 02:27:19',3),(4,'Andrés Ruiz','andres@plataforma.com','2026-11-06 02:27:19','$2y$12$rOsPqVn/xWjPr8WLPNQ.He.0Ydd./aJjv171.j/2et.Y0gLaaNuaW','RuPXgBrMor','2026-11-06 02:27:19','2026-11-06 02:27:19',3),(5,'Sofía Torres','sofia@plataforma.com','2026-11-06 02:27:19','$2y$12$rOsPqVn/xWjPr8WLPNQ.He.0Ydd./aJjv171.j/2et.Y0gLaaNuaW','qFsfQYZDVS','2026-11-06 02:27:19','2026-11-06 02:27:19',3);
+INSERT INTO `users` VALUES (1,'Administrador','admin@plataforma.com','2026-11-06 02:36:29','$2y$12$ER9U0Bhf5F3nZbrfogWVOuSLyyChQONV/wzloG9pdpr87ekjd3Jim','4wBFAiwqeS','2026-11-06 02:36:29','2026-11-06 02:36:29',1),(2,'Carlos Pérez','profesor@plataforma.com','2026-11-06 02:36:29','$2y$12$ER9U0Bhf5F3nZbrfogWVOuSLyyChQONV/wzloG9pdpr87ekjd3Jim','1afD997VTY','2026-11-06 02:36:29','2026-11-06 02:36:29',2),(3,'Laura Gómez','laura@plataforma.com','2026-11-06 02:36:29','$2y$12$ER9U0Bhf5F3nZbrfogWVOuSLyyChQONV/wzloG9pdpr87ekjd3Jim','uwAZIZEIrh','2026-11-06 02:36:29','2026-11-06 02:36:29',3),(4,'Andrés Ruiz','andres@plataforma.com','2026-11-06 02:36:29','$2y$12$ER9U0Bhf5F3nZbrfogWVOuSLyyChQONV/wzloG9pdpr87ekjd3Jim','i0J08A2wkp','2026-11-06 02:36:29','2026-11-06 02:36:29',3),(5,'Sofía Torres','sofia@plataforma.com','2026-11-06 02:36:29','$2y$12$ER9U0Bhf5F3nZbrfogWVOuSLyyChQONV/wzloG9pdpr87ekjd3Jim','L9yx483scP','2026-11-06 02:36:29','2026-11-06 02:36:29',3);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

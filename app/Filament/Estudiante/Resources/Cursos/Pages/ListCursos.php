@@ -21,7 +21,9 @@ class ListCursos extends ListRecords
         $estudianteId = auth()->user()->estudiante?->id;
 
         return [
-            'todos' => Tab::make('Catálogo'),
+            // El catálogo solo muestra cursos publicados
+            'todos' => Tab::make('Catálogo')
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('publicado', true)),
             'mis' => Tab::make('Mis cursos')
                 ->icon('heroicon-o-bookmark')
                 ->modifyQueryUsing(fn (Builder $query) => $query->whereHas('estudiantes', fn ($q) => $q->whereKey($estudianteId))),

@@ -1,10 +1,10 @@
 @php
     // Datos reales del sistema
-    $totalCursos      = \App\Models\Curso::count();
+    $totalCursos      = \App\Models\Curso::publicados()->count();
     $totalProfesores  = \App\Models\Profesor::count();
     $totalEstudiantes = \App\Models\Estudiante::count();
 
-    $cursos = \App\Models\Curso::with(['profesor.user', 'tematica'])
+    $cursos = \App\Models\Curso::publicados()->with(['profesor.user', 'tematica'])
         ->withCount(['estudiantes', 'lecciones'])
         ->latest()
         ->take(6)

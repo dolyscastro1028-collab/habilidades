@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('descripcion')->nullable(); // qué va a aprender el estudiante
             $table->foreignId('tematica_id')->constrained('tematicas')->restrictOnDelete();
             $table->string('portada')->nullable(); // imagen del curso (opcional)
+            $table->boolean('publicado')->default(false); // borrador hasta que se publique
             $table->foreignId('profesor_id')->constrained('profesores')->cascadeOnDelete();
             $table->timestamps();
         });

@@ -32,8 +32,9 @@ class ViewCurso extends ViewRecord
                 ->icon('heroicon-o-plus-circle')
                 ->color('success')
                 ->size('lg')
-                ->visible(fn () => ! $this->inscrito())
+                ->visible(fn () => $this->record->publicado && ! $this->inscrito())
                 ->action(function () use ($estudiante) {
+                    abort_unless($this->record->publicado, 403); // los borradores no aceptan inscripciones
                     $this->record->estudiantes()->syncWithoutDetaching($estudiante->id);
                     $this->record->unsetRelation('estudiantes');
 

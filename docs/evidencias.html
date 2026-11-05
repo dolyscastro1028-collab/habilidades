@@ -108,6 +108,7 @@ erDiagram
         text descripcion
         bigint tematica_id FK
         varchar portada
+        boolean publicado "borrador o publicado"
         bigint profesor_id FK
     }
     modulos {
@@ -187,6 +188,7 @@ flowchart LR
     A0 --> F["Mi perfil"]
     C --> C1["Crear curso"]
     C --> C2["Editar curso"]
+    C --> C3["Publicar / Pasar a borrador"]
     C2 --> M["Módulos y lecciones<br/>agregar, editar, ordenar, borrar"]
     C2 --> G["Estudiantes inscritos<br/>y progreso"]
     E --> E1["Crear / editar estudiante<br/>con cuenta de acceso"]
@@ -202,6 +204,7 @@ flowchart LR
     R0 --> RF["Mi perfil"]
     R1 --> R2["Crear curso"]
     R1 --> R3["Editar curso"]
+    R1 --> R6["Publicar / Pasar a borrador"]
     R3 --> R4["Módulos y lecciones"]
     R3 --> R5["Estudiantes inscritos<br/>y progreso"]
 </pre>
@@ -214,6 +217,7 @@ flowchart LR
     S0["Escritorio<br/>mis cursos con avance"] -->|Continuar / Empezar| L["Lección<br/>video, contenido, temario"]
     S0 --> K["Cursos disponibles<br/>pestaña Catálogo"]
     S0 --> SF["Mi perfil"]
+    K["Cursos disponibles<br/>pestaña Catálogo (solo publicados)"]
     K --> K2["Pestaña Mis cursos"]
     K -->|Ver detalles| VP["Vista previa del curso<br/>descripción y temario 🔒"]
     VP -->|Inscribirme| V
@@ -281,6 +285,13 @@ flowchart LR
         <tr><td>33</td><td>Pulsa <em>Inscribirme en este curso</em>.</td><td>Queda inscrito, desaparece el botón y aparecen <em>Empezar curso</em>, el progreso y los enlaces a las lecciones.</td><td class="ok">Cumple ✓</td></tr>
         <tr><td>34</td><td>Cada rol abre <em>Mi perfil</em>.</td><td>La página carga en los tres paneles con los campos de nombre, correo y nueva contraseña.</td><td class="ok">Cumple ✓</td></tr>
         <tr><td>35</td><td>El administrador revisa las gráficas del escritorio.</td><td>"Inscritos por curso" muestra Excel 2 y Python 1. "Lecciones completadas" muestra 14 días con 2 lecciones en total.</td><td class="ok">Cumple ✓</td></tr>
+        <tr><th colspan="4">Publicación de cursos (borrador / publicado)</th></tr>
+        <tr><td>37</td><td>El profesor crea el curso "Word" e intenta publicarlo sin lecciones.</td><td>El curso nuevo queda en borrador y el formulario no deja publicarlo: "Agrega al menos un módulo con una lección…". Con una lección, sí se publica.</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>38</td><td>El administrador pulsa <em>Publicar</em> en "Diseño con Canva" (sin lecciones) y luego <em>Pasar a borrador</em> / <em>Publicar</em> en "Excel básico".</td><td>Canva no se publica y avisa por qué. Excel cambia de estado en ambos sentidos. El filtro "Borradores" muestra solo los borradores.</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>39</td><td>Un estudiante busca el curso en borrador "Diseño con Canva".</td><td>No aparece en el catálogo ni en la página de inicio, y su URL da 404: no se puede inscribir.</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>40</td><td>"Excel básico" vuelve a borrador cuando Laura ya está inscrita.</td><td>Sale del catálogo, pero Laura lo sigue viendo en <em>Mis cursos</em> y puede abrir sus lecciones. Un estudiante nuevo ya no puede entrar.</td><td class="ok">Cumple ✓</td></tr>
+
+        <tr><th colspan="4">Escritorios</th></tr>
         <tr><td>36</td><td>El profesor abre su escritorio cuando existe un curso de otro profesor.</td><td>Ve "Mis cursos" y "Mis estudiantes" solo con sus datos; el curso ajeno no aparece en la tabla ni en las gráficas.</td><td class="ok">Cumple ✓</td></tr>
     </table>
 </section>
@@ -292,13 +303,13 @@ flowchart LR
     <div class="captura"><img src="capturas/01-inicio.png" alt=""><p><strong>Página de inicio.</strong> Presenta la plataforma, los cursos destacados y los accesos por rol.</p></div>
     <div class="captura"><img src="capturas/02-registro-estudiante.png" alt=""><p><strong>Registro de estudiante.</strong> Nombre, identificación, edad, correo y contraseña.</p></div>
     <div class="captura"><img src="capturas/03-admin-escritorio.png" alt=""><p><strong>Escritorio del administrador.</strong> Resumen de la plataforma, gráficas de inscritos y de actividad, y cursos más populares.</p></div>
-    <div class="captura"><img src="capturas/04-admin-cursos.png" alt=""><p><strong>Cursos (administrador).</strong> Listado con temática, profesor, módulos y lecciones.</p></div>
+    <div class="captura"><img src="capturas/04-admin-cursos.png" alt=""><p><strong>Cursos (administrador).</strong> Listado con estado (publicado o borrador), temática, profesor, módulos y lecciones, y los botones para publicar o pasar a borrador.</p></div>
     <div class="captura"><img src="capturas/05-admin-editar-curso.png" alt=""><p><strong>Editar curso.</strong> Datos del curso y sus módulos; cada módulo contiene sus lecciones con video.</p></div>
     <div class="captura"><img src="capturas/12-admin-progreso-inscritos.png" alt=""><p><strong>Progreso de los inscritos.</strong> Lecciones completadas y porcentaje de avance de cada estudiante.</p></div>
     <div class="captura"><img src="capturas/16-admin-tematicas.png" alt=""><p><strong>Temáticas.</strong> El administrador gestiona las temáticas; las que tienen cursos no se pueden borrar.</p></div>
     <div class="captura"><img src="capturas/06-admin-crear-estudiante.png" alt=""><p><strong>Crear estudiante (administrador).</strong> Incluye la cuenta de acceso para iniciar sesión.</p></div>
     <div class="captura"><img src="capturas/13-profesor-escritorio.png" alt=""><p><strong>Escritorio del profesor.</strong> Resumen y gráficas solo de sus cursos y sus estudiantes.</p></div>
-    <div class="captura"><img src="capturas/11-profesor-cursos.png" alt=""><p><strong>Mis cursos (profesor).</strong> El profesor solo ve y gestiona sus propios cursos.</p></div>
+    <div class="captura"><img src="capturas/11-profesor-cursos.png" alt=""><p><strong>Mis cursos (profesor).</strong> El profesor solo ve y gestiona sus propios cursos, y decide cuándo publicarlos.</p></div>
     <div class="captura"><img src="capturas/14-profesor-editar-curso.png" alt=""><p><strong>Editar curso (profesor).</strong> Temática, descripción, portada, y los módulos con sus lecciones.</p></div>
     <div class="captura"><img src="capturas/15-profesor-progreso.png" alt=""><p><strong>Progreso de sus estudiantes (profesor).</strong> Avance de cada inscrito en el curso.</p></div>
     <div class="captura"><img src="capturas/07-estudiante-escritorio.png" alt=""><p><strong>Escritorio del estudiante.</strong> Sus cursos con barra de avance y botón para continuar.</p></div>

@@ -13,7 +13,24 @@ class Curso extends Model
         'tematica_id',
         'profesor_id',
         'portada',
+        'publicado',
     ];
+
+    protected function casts(): array
+    {
+        return ['publicado' => 'boolean'];
+    }
+
+    // Solo los cursos publicados aparecen en el catálogo y aceptan inscripciones
+    public function scopePublicados($query)
+    {
+        return $query->where('publicado', true);
+    }
+
+    public function puedePublicarse(): bool
+    {
+        return $this->lecciones()->exists();
+    }
 
     public function tematica()
     {
