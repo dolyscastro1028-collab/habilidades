@@ -37,7 +37,12 @@
                             @endif
                         </p>
 
-                        <div style="margin-top: auto;">
+                        <div style="margin-top: auto; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            @if ($terminado)
+                                <x-filament::button tag="a" :href="route('certificado', $curso)" target="_blank" icon="heroicon-o-trophy" color="success">
+                                    Certificado
+                                </x-filament::button>
+                            @endif
                             <x-filament::button tag="a" :href="$item['url']"
                                 :color="$terminado ? 'gray' : 'primary'"
                                 :icon="$terminado ? 'heroicon-o-arrow-path' : 'heroicon-o-play'">

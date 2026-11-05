@@ -7,6 +7,7 @@ use App\Models\Role;
 use App\Models\Tematica;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Storage;
 
 class DatabaseSeeder extends Seeder
 {
@@ -109,6 +110,13 @@ class DatabaseSeeder extends Seeder
             'profesor_id' => $profesor->id,
             'publicado' => false,
         ])->modulos()->create(['titulo' => 'Primeros pasos', 'orden' => 1]);
+
+        // Material de apoyo de ejemplo en la primera lección de Excel
+        Storage::disk('public')->put('materiales/guia-formulas-excel.pdf', file_get_contents(database_path('seeders/archivos/guia-formulas-excel.pdf')));
+        Curso::where('nombre', 'Excel básico')->first()->lecciones()->orderBy('lecciones.id')->first()->update([
+            'material' => 'materiales/guia-formulas-excel.pdf',
+            'material_nombre' => 'Guía de fórmulas básicas de Excel.pdf',
+        ]);
 
         // ── Inscripciones y progreso de ejemplo ──────────────────────────
         [$excel, $python] = Curso::orderBy('id')->take(2)->get();

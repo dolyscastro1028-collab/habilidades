@@ -78,9 +78,11 @@ php artisan migrate:fresh --seed
 |---|---|---|
 | Administrador | `/admin` | Ver el resumen y las gráficas de la plataforma. Crear, consultar, editar y eliminar cursos, módulos, lecciones y temáticas. Crear las cuentas de profesores y estudiantes. Ver el progreso de los inscritos. |
 | Profesor | `/profesor` | Ver el resumen y las gráficas de sus cursos. Gestionar sus propios cursos, módulos y lecciones, y ver el progreso de sus estudiantes. Su cuenta la crea el administrador. |
-| Estudiante | `/estudiante` | Registrarse, ver el catálogo (buscar y filtrar por temática), ver la vista previa de un curso, inscribirse, desarrollar las lecciones, marcarlas como completadas y ver su progreso. Desde el inicio puede continuar en la siguiente lección pendiente. |
+| Estudiante | `/estudiante` | Registrarse, ver el catálogo (buscar y filtrar por temática), ver la vista previa de un curso, inscribirse, desarrollar las lecciones (video, contenido y material de apoyo descargable), marcarlas como completadas y ver su progreso. Al terminar un curso descarga su **certificado en PDF**. |
 
 Los cursos nuevos quedan en **borrador**: los estudiantes no los ven hasta que el administrador o el profesor los **publican**, y solo se pueden publicar si tienen al menos una lección. Si un curso vuelve a borrador, los estudiantes ya inscritos conservan su acceso.
+
+Cada certificado tiene un código que cualquiera puede comprobar en `/verificar-certificado`.
 
 Cada usuario solo puede entrar al panel de su rol. En los tres paneles, **Mi perfil** permite cambiar nombre, correo y contraseña.
 
@@ -115,9 +117,10 @@ Los videos son tutoriales públicos de YouTube y se reproducen dentro de la plat
 | `tematicas` | Ofimática, Programación, Diseño gráfico, Idiomas… | |
 | `cursos` | Nombre, descripción, duración, portada y estado (publicado o borrador) | `profesor_id` → `profesores`, `tematica_id` → `tematicas` |
 | `modulos` | Módulos de un curso, en orden | `curso_id` → `cursos` |
-| `lecciones` | Contenido y video (enlace o archivo) | `modulo_id` → `modulos` |
+| `lecciones` | Contenido, video (enlace o archivo) y material de apoyo | `modulo_id` → `modulos` |
 | `clases` | Inscripciones (estudiante ↔ curso) | `estudiante_id`, `curso_id` (únicos juntos) |
 | `progreso` | Lecciones completadas por cada estudiante | `estudiante_id`, `leccion_id` (únicos juntos) |
+| `certificados` | Certificado de un curso terminado, con código de verificación | `estudiante_id`, `curso_id` (únicos juntos) |
 
 La temática se guarda una sola vez en `tematicas`. El nombre y el correo se guardan solo en `users`; `estudiantes` y `profesores` los toman de ahí por su `user_id`, así no hay datos repetidos.
 
@@ -136,7 +139,7 @@ El porcentaje de avance se calcula como *lecciones completadas del curso ÷ tota
 
 En la carpeta [`docs/`](docs):
 
-- [`Evidencias_Plan_Mejoramiento_Grupo2.pdf`](docs/Evidencias_Plan_Mejoramiento_Grupo2.pdf): diagrama relacional, normalización, mapa de navegación por rol, tabla de 40 pruebas y capturas de pantalla.
+- [`Evidencias_Plan_Mejoramiento_Grupo2.pdf`](docs/Evidencias_Plan_Mejoramiento_Grupo2.pdf): diagrama relacional, normalización, mapa de navegación por rol, tabla de 46 pruebas y capturas de pantalla.
 - [`evidencias.html`](docs/evidencias.html): el mismo documento en HTML (se abre en el navegador).
 - [`capturas/`](docs/capturas): capturas de pantalla de cada panel.
 - [`database/habilidades.sql`](database/habilidades.sql): script SQL con la estructura y los datos de prueba.

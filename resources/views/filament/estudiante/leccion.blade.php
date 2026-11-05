@@ -84,6 +84,21 @@
                     </div>
                 </x-filament::section>
             @endif
+
+            @if ($actual->material)
+                <x-filament::section heading="Material de apoyo" icon="heroicon-o-paper-clip">
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
+                        <span style="display: inline-flex; align-items: center; gap: 0.5rem; min-width: 0;">
+                            <x-filament::icon icon="heroicon-o-document-text" style="width: 1.5rem; height: 1.5rem; flex-shrink: 0; color: rgb(219 39 119);" />
+                            <span style="overflow-wrap: anywhere;">{{ $actual->material_nombre ?? basename($actual->material) }}</span>
+                        </span>
+                        <x-filament::button tag="a" :href="$actual->materialUrl()" icon="heroicon-o-arrow-down-tray"
+                                            download="{{ $actual->material_nombre ?? basename($actual->material) }}">
+                            Descargar
+                        </x-filament::button>
+                    </div>
+                </x-filament::section>
+            @endif
         </div>
 
         {{-- Columna lateral: temario del curso --}}

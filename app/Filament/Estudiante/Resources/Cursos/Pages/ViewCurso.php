@@ -41,6 +41,15 @@ class ViewCurso extends ViewRecord
                     Notification::make()->title('Te inscribiste en ' . $this->record->nombre)->success()->send();
                 }),
 
+            // Curso al 100 %: certificado
+            Action::make('certificado')
+                ->label('Ver mi certificado')
+                ->icon('heroicon-o-trophy')
+                ->color('success')
+                ->size('lg')
+                ->visible(fn () => $this->inscrito() && $estudiante->terminoCurso($this->record))
+                ->url(fn () => route('certificado', $this->record), shouldOpenInNewTab: true),
+
             // Ya inscrito: ir directo a la siguiente lección pendiente
             Action::make('continuar')
                 ->label(fn () => $estudiante->progresoEn($this->record)['completadas'] ? 'Continuar' : 'Empezar curso')

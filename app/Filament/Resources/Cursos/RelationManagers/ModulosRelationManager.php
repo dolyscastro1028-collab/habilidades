@@ -66,6 +66,26 @@ class ModulosRelationManager extends RelationManager
                             ->directory('videos')
                             ->acceptedFileTypes(['video/mp4', 'video/webm'])
                             ->maxSize(12288), // 12 MB: límite de subida de Livewire
+
+                        FileUpload::make('material')
+                            ->label('Material de apoyo (opcional)')
+                            ->helperText('PDF, Word, Excel, PowerPoint o imagen. El estudiante lo descarga desde la lección.')
+                            ->disk('public')
+                            ->directory('materiales')
+                            ->storeFileNamesIn('material_nombre') // guarda el nombre original para mostrarlo
+                            ->acceptedFileTypes([
+                                'application/pdf',
+                                'application/msword',
+                                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                                'application/vnd.ms-excel',
+                                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                                'application/vnd.ms-powerpoint',
+                                'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                                'image/png',
+                                'image/jpeg',
+                            ])
+                            ->maxSize(10240)
+                            ->downloadable(),
                     ]),
             ]);
     }

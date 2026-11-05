@@ -9,7 +9,7 @@ class Leccion extends Model
 {
     protected $table = 'lecciones';
 
-    protected $fillable = ['modulo_id', 'titulo', 'contenido', 'video_url', 'video_archivo', 'orden'];
+    protected $fillable = ['modulo_id', 'titulo', 'contenido', 'video_url', 'video_archivo', 'material', 'material_nombre', 'orden'];
 
     public function modulo()
     {
@@ -28,6 +28,11 @@ class Leccion extends Model
     public function videoSrc(): ?string
     {
         return $this->video_archivo ? Storage::disk('public')->url($this->video_archivo) : $this->video_url;
+    }
+
+    public function materialUrl(): ?string
+    {
+        return $this->material ? Storage::disk('public')->url($this->material) : null;
     }
 
     // Estudiantes que ya completaron esta lección

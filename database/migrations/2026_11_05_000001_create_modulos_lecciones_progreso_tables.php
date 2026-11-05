@@ -25,6 +25,8 @@ return new class extends Migration
             $table->longText('contenido')->nullable();
             $table->string('video_url')->nullable();     // enlace (YouTube, mp4...)
             $table->string('video_archivo')->nullable(); // archivo subido
+            $table->string('material')->nullable();        // material de apoyo descargable (PDF, Word...)
+            $table->string('material_nombre')->nullable(); // nombre original del archivo
             $table->unsignedInteger('orden')->default(0);
             $table->timestamps();
         });

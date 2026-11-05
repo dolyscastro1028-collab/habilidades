@@ -84,7 +84,13 @@ class VerLeccion extends Page
                     ->title($terminoCurso ? '¡Felicitaciones! Terminaste el curso 🎉' : '¡Lección completada!')
                     ->body($terminoCurso ? "Completaste todas las lecciones de {$this->record->nombre}." : null)
                     ->success()
-                    ->duration($terminoCurso ? 8000 : 4000)
+                    ->duration($terminoCurso ? 12000 : 4000)
+                    ->actions($terminoCurso ? [
+                        Action::make('verCertificado')
+                            ->label('Ver mi certificado')
+                            ->button()
+                            ->url(route('certificado', $this->record), shouldOpenInNewTab: true),
+                    ] : [])
                     ->send();
 
                 // La vista escucha este evento y lanza el confeti

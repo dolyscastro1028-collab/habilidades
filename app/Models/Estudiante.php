@@ -55,6 +55,16 @@ class Estudiante extends Model
         ];
     }
 
+    public function certificados()
+    {
+        return $this->hasMany(Certificado::class);
+    }
+
+    public function terminoCurso(Curso $curso): bool
+    {
+        return $this->progresoEn($curso)['porcentaje'] === 100;
+    }
+
     // Primera lección del curso (en orden de módulo y lección) que aún no ha completado
     public function siguienteLeccion(Curso $curso): ?Leccion
     {
