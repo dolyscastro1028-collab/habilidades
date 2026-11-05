@@ -25,6 +25,7 @@ class CursosTable
                     ->sortable(),
 
                 TextColumn::make('materia')
+                    ->label('Temática')
                     ->searchable(),
 
                 TextColumn::make('duracion')

@@ -3,12 +3,14 @@
 namespace App\Filament\Estudiante\Resources\Cursos;
 
 use App\Filament\Estudiante\Resources\Cursos\Pages\ListCursos;
+use App\Filament\Estudiante\Resources\Cursos\Pages\VerLeccion;
 use App\Filament\Estudiante\Resources\Cursos\Pages\ViewCurso;
 use App\Filament\Estudiante\Resources\Cursos\Schemas\CursoForm;
 use App\Filament\Estudiante\Resources\Cursos\Tables\CursosTable;
 use App\Models\Curso;
 use BackedEnum;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\ViewEntry;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -61,9 +63,14 @@ class CursoResource extends Resource
         return $schema
             ->components([
                 TextEntry::make('nombre'),
-                TextEntry::make('materia'),
+                TextEntry::make('materia')->label('Temática'),
                 TextEntry::make('duracion')->label('Duración'),
                 TextEntry::make('profesor.nombre')->label('Profesor'),
+
+                ViewEntry::make('modulos')
+                    ->hiddenLabel()
+                    ->view('filament.estudiante.modulos')
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -82,6 +89,7 @@ class CursoResource extends Resource
         return [
             'index' => ListCursos::route('/'),
             'view' => ViewCurso::route('/{record}'),
+            'leccion' => VerLeccion::route('/{record}/lecciones/{leccion}'),
         ];
     }
 }
