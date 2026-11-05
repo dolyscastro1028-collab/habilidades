@@ -15,9 +15,14 @@ class EstudiantesTable
     {
         return $table
             ->columns([
-                TextColumn::make('nombre')
+                TextColumn::make('user.name')
+                    ->label('Nombre')
                     ->searchable()
                     ->sortable(),
+
+                TextColumn::make('user.email')
+                    ->label('Correo')
+                    ->searchable(),
 
                 TextColumn::make('identificacion')
                     ->label('Identificación')

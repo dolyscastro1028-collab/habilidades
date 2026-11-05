@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('profesores', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
+            // El nombre y el correo están en users (sin datos repetidos)
+            $table->foreignId('user_id')->unique()->constrained()->cascadeOnDelete();
             $table->string('identificacion')->unique();
             $table->unsignedTinyInteger('edad');
             $table->string('materia');

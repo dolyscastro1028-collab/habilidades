@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Profesors\Schemas;
 
+use App\Filament\Resources\CamposCuenta;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 
@@ -11,8 +12,7 @@ class ProfesorForm
     {
         return $schema
             ->components([
-                TextInput::make('nombre')
-                    ->required(),
+                CamposCuenta::seccion()->columnSpanFull(),
 
                 TextInput::make('identificacion')
                     ->label('Identificación')
@@ -27,21 +27,6 @@ class ProfesorForm
 
                 TextInput::make('materia')
                     ->required(),
-
-                // Solo aparecen al crear (son los datos de login del profesor)
-                TextInput::make('email')
-                    ->label('Correo para iniciar sesión')
-                    ->email()
-                    ->required()
-                    ->unique('users', 'email')
-                    ->visibleOn('create'),
-
-                TextInput::make('password')
-                    ->label('Contraseña')
-                    ->password()
-                    ->revealable()
-                    ->required()
-                    ->visibleOn('create'),
             ]);
     }
 }

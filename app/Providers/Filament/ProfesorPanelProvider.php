@@ -2,7 +2,6 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Auth\RegistroProfesor;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -27,10 +26,9 @@ class ProfesorPanelProvider extends PanelProvider
             ->id('profesor')
             ->path('profesor')
             ->login()
-            ->registration(RegistroProfesor::class)
-            ->brandName('Panel Profesor')
+            ->brandName('Plataforma de Habilidades · Profesor')
             ->colors([
-                'primary' => Color::Blue,
+                'primary' => Color::Purple,
             ])
             ->discoverResources(
                 in: app_path('Filament/Profesor/Resources'),

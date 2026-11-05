@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class EstudianteResource extends Resource
 {
@@ -20,11 +21,15 @@ class EstudianteResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
 
-    protected static ?string $recordTitleAttribute = 'nombre';
 
     protected static ?string $modelLabel = 'estudiante';
 
     protected static ?string $pluralModelLabel = 'estudiantes';
+
+    public static function getRecordTitle(?Model $record): string
+    {
+        return $record?->nombre ?? static::getModelLabel();
+    }
 
     public static function form(Schema $schema): Schema
     {

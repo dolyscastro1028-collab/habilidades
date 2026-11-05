@@ -2,16 +2,28 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class Estudiante extends Model
 {
     protected $fillable = [
-        'nombre',
         'identificacion',
         'edad',
         'user_id',
     ];
+
+    // El nombre vive en users: aquí solo se lee (tabla normalizada)
+    protected function nombre(): Attribute
+    {
+        return Attribute::get(fn () => $this->user?->name);
+    }
+
+    // Al borrar el registro también se borra su cuenta de acceso
+    protected static function booted(): void
+    {
+        static::deleted(fn (self $registro) => $registro->user?->delete());
+    }
 
     public function user()
     {
@@ -41,6 +53,16 @@ class Estudiante extends Model
             'total' => $total,
             'porcentaje' => $total ? (int) round($completadas * 100 / $total) : 0,
         ];
+    }
+
+    // Primera lección del curso (en orden de módulo y lección) que aún no ha completado
+    public function siguienteLeccion(Curso $curso): ?Leccion
+    {
+        $completadas = $this->leccionesCompletadas()->pluck('lecciones.id');
+
+        return $curso->modulos()->with('lecciones')->get()
+            ->flatMap->lecciones
+            ->first(fn (Leccion $leccion) => ! $completadas->contains($leccion->id));
     }
 
     // Texto para mostrar: "2 de 4 lecciones (50 %)"

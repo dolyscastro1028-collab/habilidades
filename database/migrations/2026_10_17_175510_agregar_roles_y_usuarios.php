@@ -25,26 +25,10 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->foreignId('role_id')->nullable()->constrained('roles')->restrictOnDelete();
         });
-
-        Schema::table('profesores', function (Blueprint $table) {
-            $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete();
-        });
-
-        Schema::table('estudiantes', function (Blueprint $table) {
-            $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete();
-        });
     }
 
     public function down(): void
     {
-        Schema::table('estudiantes', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('user_id');
-        });
-
-        Schema::table('profesores', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('user_id');
-        });
-
         Schema::table('users', function (Blueprint $table) {
             $table->dropConstrainedForeignId('role_id');
         });

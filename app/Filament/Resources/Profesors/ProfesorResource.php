@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class ProfesorResource extends Resource
 {
@@ -20,11 +21,15 @@ class ProfesorResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBriefcase;
 
-    protected static ?string $recordTitleAttribute = 'nombre';
 
     protected static ?string $modelLabel = 'profesor';
 
     protected static ?string $pluralModelLabel = 'profesores';
+
+    public static function getRecordTitle(?Model $record): string
+    {
+        return $record?->nombre ?? static::getModelLabel();
+    }
 
     public static function form(Schema $schema): Schema
     {

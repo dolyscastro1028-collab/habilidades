@@ -44,7 +44,6 @@ class RegistroEstudiante extends Register
 
         // 2. Crea el registro en la tabla estudiantes
         $user->estudiante()->create([
-            'nombre' => $data['name'],
             'identificacion' => $data['identificacion'],
             'edad' => $data['edad'],
         ]);

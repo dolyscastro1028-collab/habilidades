@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Estudiantes\Schemas;
 
+use App\Filament\Resources\CamposCuenta;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
@@ -12,8 +13,7 @@ class EstudianteForm
     {
         return $schema
             ->components([
-                TextInput::make('nombre')
-                    ->required(),
+                CamposCuenta::seccion()->columnSpanFull(),
 
                 TextInput::make('identificacion')
                     ->label('Identificación')
