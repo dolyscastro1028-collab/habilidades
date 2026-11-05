@@ -65,13 +65,16 @@ class CursoResource extends Resource
                 TextEntry::make('nombre'),
                 TextEntry::make('materia')->label('Temática'),
                 TextEntry::make('duracion')->label('Duración'),
-                TextEntry::make('profesor.nombre')->label('Profesor'),
+                TextEntry::make('profesor.user.name')->label('Profesor'),
 
                 TextEntry::make('progreso')
                     ->label('Mi progreso')
-                    ->state(fn (Curso $record) => auth()->user()->estudiante->progresoTexto($record))
-                    ->badge()
-                    ->color('success'),
+                    ->state(fn (Curso $record) => auth()->user()->estudiante->progresoTexto($record)),
+
+                ViewEntry::make('barra')
+                    ->hiddenLabel()
+                    ->state(fn (Curso $record) => auth()->user()->estudiante->progresoEn($record)['porcentaje'])
+                    ->view('filament.barra-progreso'),
 
                 ViewEntry::make('modulos')
                     ->hiddenLabel()

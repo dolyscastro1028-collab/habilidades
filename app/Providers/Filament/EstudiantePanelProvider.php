@@ -28,9 +28,9 @@ class EstudiantePanelProvider extends PanelProvider
             ->path('estudiante')
             ->login()
             ->registration(RegistroEstudiante::class)
-            ->brandName('Panel Estudiante')
+            ->brandName('Plataforma de Habilidades')
             ->colors([
-                'primary' => Color::Emerald,
+                'primary' => Color::Pink,
             ])
             ->discoverResources(
                 in: app_path('Filament/Estudiante/Resources'),

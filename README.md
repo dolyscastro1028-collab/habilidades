@@ -76,9 +76,9 @@ php artisan migrate:fresh --seed
 
 | Rol | Dirección | Qué puede hacer |
 |---|---|---|
-| Administrador | `/admin` | Crear, consultar, editar y eliminar cursos, módulos y lecciones. Gestionar profesores y estudiantes. Ver el progreso de los inscritos. |
-| Profesor | `/profesor` | Gestionar sus propios cursos, módulos y lecciones, y ver el progreso de sus estudiantes. Se puede registrar desde el panel. |
-| Estudiante | `/estudiante` | Registrarse, ver el catálogo, inscribirse, desarrollar las lecciones, marcarlas como completadas y ver su progreso. |
+| Administrador | `/admin` | Ver el resumen de la plataforma. Crear, consultar, editar y eliminar cursos, módulos y lecciones. Crear las cuentas de profesores y estudiantes. Ver el progreso de los inscritos. |
+| Profesor | `/profesor` | Gestionar sus propios cursos, módulos y lecciones, y ver el progreso de sus estudiantes. Su cuenta la crea el administrador. |
+| Estudiante | `/estudiante` | Registrarse, ver el catálogo, inscribirse, desarrollar las lecciones, marcarlas como completadas y ver su progreso. Desde el inicio puede continuar en la siguiente lección pendiente. |
 
 Cada usuario solo puede entrar al panel de su rol.
 
@@ -99,19 +99,23 @@ Cursos de prueba:
 - **Excel básico** (Ofimática): módulos *Fórmulas* y *Gráficos*, 4 lecciones con video.
 - **Programación con Python** (Programación): módulos *Fundamentos* y *Estructuras de control*, 4 lecciones con video.
 
+Los videos son tutoriales públicos de YouTube y se reproducen dentro de la plataforma.
+
 ## Base de datos
 
 | Tabla | Descripción | Relaciones |
 |---|---|---|
 | `roles` | admin, profesor, estudiante | |
-| `users` | Cuentas para iniciar sesión | `role_id` → `roles` |
-| `profesores` | Datos del profesor | `user_id` → `users` |
-| `estudiantes` | Datos del estudiante | `user_id` → `users` |
+| `users` | Cuenta de acceso: nombre, correo y contraseña | `role_id` → `roles` |
+| `profesores` | Identificación, edad y materia | `user_id` → `users` (único) |
+| `estudiantes` | Identificación y edad | `user_id` → `users` (único) |
 | `cursos` | Nombre, temática y duración | `profesor_id` → `profesores` |
 | `modulos` | Módulos de un curso, en orden | `curso_id` → `cursos` |
 | `lecciones` | Contenido y video (enlace o archivo) | `modulo_id` → `modulos` |
 | `clases` | Inscripciones (estudiante ↔ curso) | `estudiante_id`, `curso_id` (únicos juntos) |
 | `progreso` | Lecciones completadas por cada estudiante | `estudiante_id`, `leccion_id` (únicos juntos) |
+
+El nombre y el correo se guardan solo en `users`; `estudiantes` y `profesores` los toman de ahí por su `user_id`, así no hay datos repetidos.
 
 El porcentaje de avance se calcula como *lecciones completadas del curso ÷ total de lecciones del curso × 100*.
 

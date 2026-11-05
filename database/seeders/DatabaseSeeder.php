@@ -9,9 +9,6 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    // Video de muestra libre (CC0). Reemplazar por los videos reales de cada lección.
-    private const VIDEO = 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4';
-
     public function run(): void
     {
         // ── Usuarios (contraseña de todos: password) ──────────────────────
@@ -26,7 +23,6 @@ class DatabaseSeeder extends Seeder
             'email' => 'profesor@plataforma.com',
             'role_id' => Role::idDe('profesor'),
         ])->profesor()->create([
-            'nombre' => 'Carlos Pérez',
             'identificacion' => '10203040',
             'edad' => 35,
             'materia' => 'Informática',
@@ -41,7 +37,6 @@ class DatabaseSeeder extends Seeder
             'email' => $e[1],
             'role_id' => Role::idDe('estudiante'),
         ])->estudiante()->create([
-            'nombre' => $e[0],
             'identificacion' => $e[2],
             'edad' => $e[3],
         ]));
@@ -49,12 +44,24 @@ class DatabaseSeeder extends Seeder
         // ── Cursos → módulos → lecciones ─────────────────────────────────
         $cursos = [
             ['Excel básico', 'Ofimática', '20 horas', [
-                'Fórmulas' => ['Introducción a las fórmulas', 'Funciones SUMA y PROMEDIO'],
-                'Gráficos' => ['Crear un gráfico de barras', 'Personalizar gráficos'],
+                'Fórmulas' => [
+                    'Introducción a las fórmulas' => 'https://www.youtube.com/watch?v=9KiXJtMrmbc',
+                    'Funciones SUMA y PROMEDIO' => 'https://www.youtube.com/watch?v=LW0B8hgreeo',
+                ],
+                'Gráficos' => [
+                    'Crear un gráfico de barras' => 'https://www.youtube.com/watch?v=L5567d76dKk',
+                    'Personalizar gráficos' => 'https://www.youtube.com/watch?v=ZN_IjSk0tw8',
+                ],
             ]],
             ['Programación con Python', 'Programación', '30 horas', [
-                'Fundamentos' => ['Variables y tipos de datos', 'Entrada y salida'],
-                'Estructuras de control' => ['Condicionales if/else', 'Ciclos for y while'],
+                'Fundamentos' => [
+                    'Variables y tipos de datos' => 'https://www.youtube.com/watch?v=gF62RDGpW1k',
+                    'Entrada y salida' => 'https://www.youtube.com/watch?v=EXno9AKikDo',
+                ],
+                'Estructuras de control' => [
+                    'Condicionales if/else' => 'https://www.youtube.com/watch?v=iFBcCDDDsms',
+                    'Ciclos for y while' => 'https://www.youtube.com/watch?v=PWocHp9ZpEw',
+                ],
             ]],
         ];
 
@@ -70,12 +77,14 @@ class DatabaseSeeder extends Seeder
             foreach ($modulos as $tituloModulo => $lecciones) {
                 $modulo = $curso->modulos()->create(['titulo' => $tituloModulo, 'orden' => $ordenModulo++]);
 
-                foreach ($lecciones as $i => $tituloLeccion) {
+                $ordenLeccion = 1;
+                foreach ($lecciones as $tituloLeccion => $video) {
                     $modulo->lecciones()->create([
                         'titulo' => $tituloLeccion,
-                        'contenido' => "<p>En esta lección aprenderás: {$tituloLeccion}.</p>",
-                        'video_url' => self::VIDEO,
-                        'orden' => $i + 1,
+                        'contenido' => "<p>En esta lección aprenderás: <strong>{$tituloLeccion}</strong>.</p>"
+                            . '<p>Mira el video completo y luego marca la lección como completada.</p>',
+                        'video_url' => $video,
+                        'orden' => $ordenLeccion++,
                     ]);
                 }
             }

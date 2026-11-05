@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Cursos\RelationManagers;
 use App\Models\Estudiante;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Table;
 
 // Admin y profesor: estudiantes inscritos en el curso y su avance
@@ -23,12 +24,11 @@ class EstudiantesRelationManager extends RelationManager
 
     public function table(Table $table): Table
     {
-        $porcentaje = fn (Estudiante $record) => $record->progresoEn($this->getOwnerRecord())['porcentaje'];
-
         return $table
             ->recordTitleAttribute('nombre')
             ->columns([
-                TextColumn::make('nombre')
+                TextColumn::make('user.name')
+                    ->label('Nombre')
                     ->searchable(),
 
                 TextColumn::make('identificacion')
@@ -47,15 +47,10 @@ class EstudiantesRelationManager extends RelationManager
                         return "{$p['completadas']} de {$p['total']}";
                     }),
 
-                TextColumn::make('porcentaje')
+                ViewColumn::make('porcentaje')
                     ->label('Avance')
-                    ->state(fn (Estudiante $record) => $porcentaje($record) . ' %')
-                    ->badge()
-                    ->color(fn (Estudiante $record) => match (true) {
-                        $porcentaje($record) === 100 => 'success',
-                        $porcentaje($record) > 0 => 'warning',
-                        default => 'gray',
-                    }),
+                    ->state(fn (Estudiante $record) => $record->progresoEn($this->getOwnerRecord())['porcentaje'])
+                    ->view('filament.barra-progreso'),
             ]);
     }
 }

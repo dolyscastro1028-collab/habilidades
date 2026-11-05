@@ -4,7 +4,7 @@
     $totalProfesores  = \App\Models\Profesor::count();
     $totalEstudiantes = \App\Models\Estudiante::count();
 
-    $cursos = \App\Models\Curso::with('profesor')
+    $cursos = \App\Models\Curso::with('profesor.user')
         ->withCount(['estudiantes', 'lecciones'])
         ->latest()
         ->take(6)
@@ -616,12 +616,12 @@
                             <li><span class="material-symbols-rounded filled">check_circle</span> Crea y edita tus propios cursos</li>
                             <li><span class="material-symbols-rounded filled">check_circle</span> Sube documentos, enlaces y videos</li>
                             <li><span class="material-symbols-rounded filled">check_circle</span> Ordena las lecciones arrastrándolas</li>
+                            <li><span class="material-symbols-rounded filled">check_circle</span> Mira el progreso de cada estudiante</li>
                         </ul>
                         <div class="role-actions">
                             <a href="{{ url('/profesor/login') }}" class="btn btn-filled">
                                 <span class="material-symbols-rounded">login</span> Entrar a mi panel
                             </a>
-                            <a href="{{ url('/profesor/register') }}" class="btn btn-text">Quiero enseñar</a>
                         </div>
                     </article>
                 </div>

@@ -22,7 +22,7 @@ class CursosTable
                     ->searchable(),
                 TextColumn::make('duracion')
                     ->label('Duración'),
-                TextColumn::make('profesor.nombre')
+                TextColumn::make('profesor.user.name')
                     ->label('Profesor')
                     ->searchable(),
                 TextColumn::make('modulos_count')

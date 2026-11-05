@@ -27,8 +27,9 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->brandName('Plataforma de Habilidades · Admin')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Violet,
             ])
             ->discoverResources(
                 in: app_path('Filament/Resources'),
@@ -47,7 +48,6 @@ class AdminPanelProvider extends PanelProvider
             )
             ->widgets([
                 Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

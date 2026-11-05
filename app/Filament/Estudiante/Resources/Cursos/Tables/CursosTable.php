@@ -7,6 +7,7 @@ use Filament\Actions\Action;
 use Filament\Actions\ViewAction;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Table;
 
 class CursosTable
@@ -31,7 +32,7 @@ class CursosTable
                 TextColumn::make('duracion')
                     ->label('Duración'),
 
-                TextColumn::make('profesor.nombre')
+                TextColumn::make('profesor.user.name')
                     ->label('Profesor'),
 
                 TextColumn::make('lecciones_count')
@@ -39,14 +40,12 @@ class CursosTable
                     ->label('Lecciones')
                     ->badge(),
 
-                TextColumn::make('progreso')
+                ViewColumn::make('progreso')
                     ->label('Mi progreso')
                     ->state(fn (Curso $record) => $inscrito($record)
-                        ? auth()->user()->estudiante->progresoEn($record)['porcentaje'] . ' %'
+                        ? auth()->user()->estudiante->progresoEn($record)['porcentaje']
                         : null)
-                    ->placeholder('—')
-                    ->badge()
-                    ->color('success'),
+                    ->view('filament.barra-progreso'),
 
                 TextColumn::make('estado')
                     ->label('Estado')
