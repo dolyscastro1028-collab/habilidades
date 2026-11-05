@@ -39,6 +39,15 @@ class CursosTable
                     ->label('Lecciones')
                     ->badge(),
 
+                TextColumn::make('progreso')
+                    ->label('Mi progreso')
+                    ->state(fn (Curso $record) => $inscrito($record)
+                        ? auth()->user()->estudiante->progresoEn($record)['porcentaje'] . ' %'
+                        : null)
+                    ->placeholder('—')
+                    ->badge()
+                    ->color('success'),
+
                 TextColumn::make('estado')
                     ->label('Estado')
                     ->state(fn (Curso $record) => $inscrito($record) ? 'Inscrito' : 'Disponible')

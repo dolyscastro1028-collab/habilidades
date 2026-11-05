@@ -5,6 +5,7 @@ namespace App\Filament\Profesor\Resources\Cursos;
 use App\Filament\Profesor\Resources\Cursos\Pages\CreateCurso;
 use App\Filament\Profesor\Resources\Cursos\Pages\EditCurso;
 use App\Filament\Profesor\Resources\Cursos\Pages\ListCursos;
+use App\Filament\Resources\Cursos\RelationManagers\EstudiantesRelationManager;
 use App\Filament\Resources\Cursos\RelationManagers\ModulosRelationManager;
 use App\Filament\Profesor\Resources\Cursos\Schemas\CursoForm;
 use App\Filament\Profesor\Resources\Cursos\Tables\CursosTable;
@@ -49,6 +50,7 @@ class CursoResource extends Resource
     {
         return [
             ModulosRelationManager::class,
+            EstudiantesRelationManager::class,
         ];
     }
 

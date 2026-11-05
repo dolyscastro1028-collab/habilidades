@@ -67,6 +67,12 @@ class CursoResource extends Resource
                 TextEntry::make('duracion')->label('Duración'),
                 TextEntry::make('profesor.nombre')->label('Profesor'),
 
+                TextEntry::make('progreso')
+                    ->label('Mi progreso')
+                    ->state(fn (Curso $record) => auth()->user()->estudiante->progresoTexto($record))
+                    ->badge()
+                    ->color('success'),
+
                 ViewEntry::make('modulos')
                     ->hiddenLabel()
                     ->view('filament.estudiante.modulos')
