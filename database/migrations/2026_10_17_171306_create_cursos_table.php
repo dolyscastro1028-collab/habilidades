@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nombre');
             $table->string('duracion');
             $table->string('materia');
+            $table->string('portada')->nullable(); // imagen del curso (opcional)
             $table->foreignId('profesor_id')->constrained('profesores')->cascadeOnDelete();
             $table->timestamps();
         });

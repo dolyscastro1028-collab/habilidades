@@ -11,6 +11,7 @@ class Curso extends Model
         'duracion',
         'materia',
         'profesor_id',
+        'portada',
     ];
 
     public function profesor()

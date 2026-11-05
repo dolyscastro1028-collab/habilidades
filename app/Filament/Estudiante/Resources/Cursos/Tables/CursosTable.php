@@ -2,11 +2,11 @@
 
 namespace App\Filament\Estudiante\Resources\Cursos\Tables;
 
+use App\Filament\Estudiante\Resources\Cursos\CursoResource;
 use App\Models\Curso;
 use Filament\Actions\Action;
 use Filament\Actions\ViewAction;
 use Filament\Notifications\Notification;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Table;
 
@@ -15,44 +15,24 @@ class CursosTable
     public static function configure(Table $table): Table
     {
         // ¿El estudiante logueado ya está inscrito en este curso?
-        $inscrito = fn (Curso $record): bool => $record->estudiantes()
-            ->whereKey(auth()->user()->estudiante?->id)
-            ->exists();
+        // (usa la relación ya cargada en la consulta del catálogo)
+        $inscrito = fn (Curso $record): bool => $record->estudiantes->contains('id', auth()->user()->estudiante?->id);
 
         return $table
+            // Catálogo en tarjetas: una tarjeta por curso, 1 / 2 / 3 por fila según la pantalla
+            ->modifyQueryUsing(fn ($query) => $query
+                ->with(['profesor.user', 'estudiantes'])
+                ->withCount(['modulos', 'lecciones']))
+            ->contentGrid(['md' => 2, 'xl' => 3])
+            ->searchable(['nombre', 'materia'])
+            ->searchPlaceholder('Buscar por nombre o temática')
+            ->paginated([12, 24])
             ->columns([
-                TextColumn::make('nombre')
-                    ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('materia')
-                    ->label('Temática')
-                    ->searchable(),
-
-                TextColumn::make('duracion')
-                    ->label('Duración'),
-
-                TextColumn::make('profesor.user.name')
-                    ->label('Profesor'),
-
-                TextColumn::make('lecciones_count')
-                    ->counts('lecciones')
-                    ->label('Lecciones')
-                    ->badge(),
-
-                ViewColumn::make('progreso')
-                    ->label('Mi progreso')
-                    ->state(fn (Curso $record) => $inscrito($record)
-                        ? auth()->user()->estudiante->progresoEn($record)['porcentaje']
-                        : null)
-                    ->view('filament.barra-progreso'),
-
-                TextColumn::make('estado')
-                    ->label('Estado')
-                    ->state(fn (Curso $record) => $inscrito($record) ? 'Inscrito' : 'Disponible')
-                    ->badge()
-                    ->color(fn (string $state) => $state === 'Inscrito' ? 'success' : 'gray'),
+                ViewColumn::make('tarjeta')
+                    ->view('filament.estudiante.tarjeta-curso'),
             ])
+            // Clic en la tarjeta: entra al curso si está inscrito
+            ->recordUrl(fn (Curso $record) => $inscrito($record) ? CursoResource::getUrl('view', ['record' => $record]) : null)
             ->recordActions([
                 // Solo aparece si está inscrito (lo controla canView)
                 ViewAction::make()
