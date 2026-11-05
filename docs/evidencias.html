@@ -55,7 +55,7 @@
 <!-- ───────────────────────── 1. DIAGRAMA ───────────────────────── -->
 <section class="seccion">
     <h2>1. Diagrama relacional de la base de datos</h2>
-    <p>La base de datos <code>habilidades</code> tiene 9 tablas propias del sistema, relacionadas con llaves foráneas.
+    <p>La base de datos <code>habilidades</code> tiene 10 tablas propias del sistema, relacionadas con llaves foráneas.
        <strong>PK</strong> = llave primaria, <strong>FK</strong> = llave foránea, <strong>UK</strong> = valor único.</p>
 
     <div class="diagrama er">
@@ -65,6 +65,7 @@ erDiagram
     users ||--o| estudiantes : "es"
     users ||--o| profesores : "es"
     profesores ||--o{ cursos : "dicta"
+    tematicas ||--o{ cursos : "clasifica"
     cursos ||--o{ modulos : "contiene"
     modulos ||--o{ lecciones : "contiene"
     estudiantes ||--o{ clases : "se inscribe"
@@ -96,11 +97,16 @@ erDiagram
         tinyint edad
         varchar materia
     }
+    tematicas {
+        bigint id PK
+        varchar nombre UK
+    }
     cursos {
         bigint id PK
         varchar nombre
         varchar duracion
-        varchar materia "temática"
+        text descripcion
+        bigint tematica_id FK
         varchar portada
         bigint profesor_id FK
     }
@@ -139,7 +145,7 @@ erDiagram
         <tr><th>Forma normal</th><th>Cómo se cumple</th></tr>
         <tr><td>1FN</td><td>Cada columna guarda un solo valor. Los módulos, lecciones, inscripciones y avances van en tablas propias, no en listas dentro de una columna.</td></tr>
         <tr><td>2FN</td><td>Las tablas intermedias <code>clases</code> y <code>progreso</code> solo guardan las llaves de la relación y su fecha; no repiten datos del curso, del estudiante ni de la lección.</td></tr>
-        <tr><td>3FN</td><td>El nombre, el correo y la contraseña están solo en <code>users</code>. <code>estudiantes</code> y <code>profesores</code> los consultan por <code>user_id</code>. El rol está en <code>roles</code> y se referencia por <code>role_id</code>.</td></tr>
+        <tr><td>3FN</td><td>El nombre, el correo y la contraseña están solo en <code>users</code>. <code>estudiantes</code> y <code>profesores</code> los consultan por <code>user_id</code>. El rol está en <code>roles</code> (<code>role_id</code>) y la temática en <code>tematicas</code> (<code>tematica_id</code>): cada nombre se escribe una sola vez.</td></tr>
     </table>
 
     <h3>Reglas de integridad</h3>
@@ -148,7 +154,7 @@ erDiagram
         <tr><td>UNIQUE (<code>curso_id</code>, <code>estudiante_id</code>) en <code>clases</code></td><td>Un estudiante no se puede inscribir dos veces en el mismo curso.</td></tr>
         <tr><td>UNIQUE (<code>estudiante_id</code>, <code>leccion_id</code>) en <code>progreso</code></td><td>Una lección solo cuenta una vez como completada.</td></tr>
         <tr><td>ON DELETE CASCADE en módulos, lecciones, clases y progreso</td><td>Al borrar un curso se borran sus módulos, lecciones, inscripciones y avances.</td></tr>
-        <tr><td>ON DELETE RESTRICT en <code>users.role_id</code></td><td>No se puede borrar un rol que tenga usuarios.</td></tr>
+        <tr><td>ON DELETE RESTRICT en <code>users.role_id</code> y <code>cursos.tematica_id</code></td><td>No se puede borrar un rol que tenga usuarios ni una temática que tenga cursos.</td></tr>
     </table>
     <p class="nota">El avance se calcula así: lecciones completadas del curso ÷ total de lecciones del curso × 100. El script con la estructura y los datos de prueba está en <code>database/habilidades.sql</code>.</p>
 </section>
@@ -174,9 +180,11 @@ flowchart LR
     <div class="diagrama">
 <pre class="mermaid">
 flowchart LR
-    A0["Escritorio<br/>resumen y cursos populares"] --> C["Cursos<br/>listado"]
+    A0["Escritorio<br/>resumen, gráficas y cursos populares"] --> C["Cursos<br/>listado"]
     A0 --> E["Estudiantes<br/>listado"]
     A0 --> P["Profesores<br/>listado"]
+    A0 --> T["Temáticas<br/>crear, editar, borrar"]
+    A0 --> F["Mi perfil"]
     C --> C1["Crear curso"]
     C --> C2["Editar curso"]
     C2 --> M["Módulos y lecciones<br/>agregar, editar, ordenar, borrar"]
@@ -190,7 +198,8 @@ flowchart LR
     <div class="diagrama">
 <pre class="mermaid">
 flowchart LR
-    R0["Escritorio"] --> R1["Mis cursos<br/>solo los propios"]
+    R0["Escritorio<br/>resumen y gráficas de mis cursos"] --> R1["Mis cursos<br/>solo los propios"]
+    R0 --> RF["Mi perfil"]
     R1 --> R2["Crear curso"]
     R1 --> R3["Editar curso"]
     R3 --> R4["Módulos y lecciones"]
@@ -204,10 +213,13 @@ flowchart LR
 flowchart LR
     S0["Escritorio<br/>mis cursos con avance"] -->|Continuar / Empezar| L["Lección<br/>video, contenido, temario"]
     S0 --> K["Cursos disponibles<br/>pestaña Catálogo"]
+    S0 --> SF["Mi perfil"]
     K --> K2["Pestaña Mis cursos"]
+    K -->|Ver detalles| VP["Vista previa del curso<br/>descripción y temario 🔒"]
+    VP -->|Inscribirme| V
     K -->|Inscribirme| K2
     K2 -->|Ver contenido| V["Curso<br/>módulos y lecciones"]
-    V --> L
+    V -->|Empezar / Continuar| L
     L -->|Marcar como completada| L
     L -->|Anterior / Siguiente| L
 </pre>
@@ -245,7 +257,7 @@ flowchart LR
         <tr><td>15</td><td>El profesor entra a <em>Mis cursos</em>.</td><td>Solo ve sus cursos; el curso de otro profesor no aparece y su URL da 404.</td><td class="ok">Cumple ✓</td></tr>
 
         <tr><th colspan="4">Inscripción a cursos (estudiante)</th></tr>
-        <tr><td>16</td><td>El estudiante ve el catálogo y busca "Ofimática".</td><td>Aparecen los cursos en tarjetas y la búsqueda deja solo "Excel básico".</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>16</td><td>El estudiante ve el catálogo y filtra por la temática "Ofimática".</td><td>Aparecen los cursos en tarjetas con su descripción y el filtro deja solo "Excel básico".</td><td class="ok">Cumple ✓</td></tr>
         <tr><td>17</td><td>Pulsa <em>Inscribirme</em> en "Excel básico".</td><td>Se guarda la inscripción en <code>clases</code> y el curso aparece en <em>Mis cursos</em>.</td><td class="ok">Cumple ✓</td></tr>
         <tr><td>18</td><td>Pulsa <em>Retirarme</em>.</td><td>Se borra la inscripción.</td><td class="ok">Cumple ✓</td></tr>
         <tr><td>19</td><td>Un estudiante no inscrito abre la URL de una lección.</td><td>El sistema le niega el acceso (403).</td><td class="ok">Cumple ✓</td></tr>
@@ -260,6 +272,16 @@ flowchart LR
         <tr><td>26</td><td>El administrador abre <em>Estudiantes inscritos y progreso</em> de "Excel básico".</td><td>Laura Gómez: 2 de 4 (50 %). Andrés Ruiz: 0 de 4 (0 %).</td><td class="ok">Cumple ✓</td></tr>
         <tr><td>27</td><td>El administrador abre su escritorio.</td><td>Ve los totales de cursos, estudiantes, inscripciones y el avance promedio (17 %).</td><td class="ok">Cumple ✓</td></tr>
         <tr><td>28</td><td>Se calcula el avance de un curso sin lecciones.</td><td>Muestra 0 % sin generar error.</td><td class="ok">Cumple ✓</td></tr>
+
+        <tr><th colspan="4">Temáticas, vista previa, perfil y escritorios</th></tr>
+        <tr><td>29</td><td>El administrador crea el curso "Inglés A1" con la temática "Idiomas" y una descripción.</td><td>El curso queda guardado con su temática y su descripción.</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>30</td><td>Intenta crear otra temática llamada "Ofimática".</td><td>El formulario muestra que el nombre ya existe.</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>31</td><td>Intenta borrar la temática "Ofimática", que tiene cursos.</td><td>No aparece el botón de borrar. La temática "Idiomas", sin cursos, sí se puede borrar.</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>32</td><td>Un estudiante no inscrito abre "Excel básico".</td><td>Ve la descripción y el temario con candados, sin enlaces a las lecciones, y el botón <em>Inscribirme en este curso</em>.</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>33</td><td>Pulsa <em>Inscribirme en este curso</em>.</td><td>Queda inscrito, desaparece el botón y aparecen <em>Empezar curso</em>, el progreso y los enlaces a las lecciones.</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>34</td><td>Cada rol abre <em>Mi perfil</em>.</td><td>La página carga en los tres paneles con los campos de nombre, correo y nueva contraseña.</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>35</td><td>El administrador revisa las gráficas del escritorio.</td><td>"Inscritos por curso" muestra Excel 2 y Python 1. "Lecciones completadas" muestra 14 días con 2 lecciones en total.</td><td class="ok">Cumple ✓</td></tr>
+        <tr><td>36</td><td>El profesor abre su escritorio cuando existe un curso de otro profesor.</td><td>Ve "Mis cursos" y "Mis estudiantes" solo con sus datos; el curso ajeno no aparece en la tabla ni en las gráficas.</td><td class="ok">Cumple ✓</td></tr>
     </table>
 </section>
 
@@ -269,16 +291,22 @@ flowchart LR
 
     <div class="captura"><img src="capturas/01-inicio.png" alt=""><p><strong>Página de inicio.</strong> Presenta la plataforma, los cursos destacados y los accesos por rol.</p></div>
     <div class="captura"><img src="capturas/02-registro-estudiante.png" alt=""><p><strong>Registro de estudiante.</strong> Nombre, identificación, edad, correo y contraseña.</p></div>
-    <div class="captura"><img src="capturas/03-admin-escritorio.png" alt=""><p><strong>Escritorio del administrador.</strong> Resumen de la plataforma y cursos más populares.</p></div>
+    <div class="captura"><img src="capturas/03-admin-escritorio.png" alt=""><p><strong>Escritorio del administrador.</strong> Resumen de la plataforma, gráficas de inscritos y de actividad, y cursos más populares.</p></div>
     <div class="captura"><img src="capturas/04-admin-cursos.png" alt=""><p><strong>Cursos (administrador).</strong> Listado con temática, profesor, módulos y lecciones.</p></div>
     <div class="captura"><img src="capturas/05-admin-editar-curso.png" alt=""><p><strong>Editar curso.</strong> Datos del curso y sus módulos; cada módulo contiene sus lecciones con video.</p></div>
     <div class="captura"><img src="capturas/12-admin-progreso-inscritos.png" alt=""><p><strong>Progreso de los inscritos.</strong> Lecciones completadas y porcentaje de avance de cada estudiante.</p></div>
+    <div class="captura"><img src="capturas/16-admin-tematicas.png" alt=""><p><strong>Temáticas.</strong> El administrador gestiona las temáticas; las que tienen cursos no se pueden borrar.</p></div>
     <div class="captura"><img src="capturas/06-admin-crear-estudiante.png" alt=""><p><strong>Crear estudiante (administrador).</strong> Incluye la cuenta de acceso para iniciar sesión.</p></div>
-    <div class="captura"><img src="capturas/11-profesor-cursos.png" alt=""><p><strong>Panel del profesor.</strong> El profesor solo ve y gestiona sus propios cursos.</p></div>
+    <div class="captura"><img src="capturas/13-profesor-escritorio.png" alt=""><p><strong>Escritorio del profesor.</strong> Resumen y gráficas solo de sus cursos y sus estudiantes.</p></div>
+    <div class="captura"><img src="capturas/11-profesor-cursos.png" alt=""><p><strong>Mis cursos (profesor).</strong> El profesor solo ve y gestiona sus propios cursos.</p></div>
+    <div class="captura"><img src="capturas/14-profesor-editar-curso.png" alt=""><p><strong>Editar curso (profesor).</strong> Temática, descripción, portada, y los módulos con sus lecciones.</p></div>
+    <div class="captura"><img src="capturas/15-profesor-progreso.png" alt=""><p><strong>Progreso de sus estudiantes (profesor).</strong> Avance de cada inscrito en el curso.</p></div>
     <div class="captura"><img src="capturas/07-estudiante-escritorio.png" alt=""><p><strong>Escritorio del estudiante.</strong> Sus cursos con barra de avance y botón para continuar.</p></div>
-    <div class="captura"><img src="capturas/08-estudiante-catalogo.png" alt=""><p><strong>Catálogo de cursos.</strong> Tarjetas con temática, profesor, módulos, lecciones, duración y avance.</p></div>
+    <div class="captura"><img src="capturas/08-estudiante-catalogo.png" alt=""><p><strong>Catálogo de cursos.</strong> Tarjetas con temática, profesor, descripción, módulos, lecciones y duración. Se puede buscar y filtrar por temática.</p></div>
+    <div class="captura"><img src="capturas/17-estudiante-vista-previa.png" alt=""><p><strong>Vista previa del curso.</strong> Antes de inscribirse, el estudiante ve la descripción y el temario con las lecciones bloqueadas.</p></div>
     <div class="captura"><img src="capturas/09-estudiante-curso.png" alt=""><p><strong>Vista del curso.</strong> Módulos y lecciones, con las completadas marcadas.</p></div>
     <div class="captura"><img src="capturas/10-estudiante-leccion.png" alt=""><p><strong>Lección.</strong> Video, botón de completar, navegación y temario con el avance del curso.</p></div>
+    <div class="captura"><img src="capturas/18-perfil.png" alt=""><p><strong>Mi perfil.</strong> Cada usuario puede cambiar su nombre, correo y contraseña.</p></div>
 </section>
 
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>

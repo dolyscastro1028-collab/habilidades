@@ -76,11 +76,11 @@ php artisan migrate:fresh --seed
 
 | Rol | Dirección | Qué puede hacer |
 |---|---|---|
-| Administrador | `/admin` | Ver el resumen de la plataforma. Crear, consultar, editar y eliminar cursos, módulos y lecciones. Crear las cuentas de profesores y estudiantes. Ver el progreso de los inscritos. |
-| Profesor | `/profesor` | Gestionar sus propios cursos, módulos y lecciones, y ver el progreso de sus estudiantes. Su cuenta la crea el administrador. |
-| Estudiante | `/estudiante` | Registrarse, ver el catálogo, inscribirse, desarrollar las lecciones, marcarlas como completadas y ver su progreso. Desde el inicio puede continuar en la siguiente lección pendiente. |
+| Administrador | `/admin` | Ver el resumen y las gráficas de la plataforma. Crear, consultar, editar y eliminar cursos, módulos, lecciones y temáticas. Crear las cuentas de profesores y estudiantes. Ver el progreso de los inscritos. |
+| Profesor | `/profesor` | Ver el resumen y las gráficas de sus cursos. Gestionar sus propios cursos, módulos y lecciones, y ver el progreso de sus estudiantes. Su cuenta la crea el administrador. |
+| Estudiante | `/estudiante` | Registrarse, ver el catálogo (buscar y filtrar por temática), ver la vista previa de un curso, inscribirse, desarrollar las lecciones, marcarlas como completadas y ver su progreso. Desde el inicio puede continuar en la siguiente lección pendiente. |
 
-Cada usuario solo puede entrar al panel de su rol.
+Cada usuario solo puede entrar al panel de su rol. En los tres paneles, **Mi perfil** permite cambiar nombre, correo y contraseña.
 
 ## Usuarios de prueba
 
@@ -109,13 +109,14 @@ Los videos son tutoriales públicos de YouTube y se reproducen dentro de la plat
 | `users` | Cuenta de acceso: nombre, correo y contraseña | `role_id` → `roles` |
 | `profesores` | Identificación, edad y materia | `user_id` → `users` (único) |
 | `estudiantes` | Identificación y edad | `user_id` → `users` (único) |
-| `cursos` | Nombre, temática y duración | `profesor_id` → `profesores` |
+| `tematicas` | Ofimática, Programación, Diseño gráfico, Idiomas… | |
+| `cursos` | Nombre, descripción, duración y portada | `profesor_id` → `profesores`, `tematica_id` → `tematicas` |
 | `modulos` | Módulos de un curso, en orden | `curso_id` → `cursos` |
 | `lecciones` | Contenido y video (enlace o archivo) | `modulo_id` → `modulos` |
 | `clases` | Inscripciones (estudiante ↔ curso) | `estudiante_id`, `curso_id` (únicos juntos) |
 | `progreso` | Lecciones completadas por cada estudiante | `estudiante_id`, `leccion_id` (únicos juntos) |
 
-El nombre y el correo se guardan solo en `users`; `estudiantes` y `profesores` los toman de ahí por su `user_id`, así no hay datos repetidos.
+La temática se guarda una sola vez en `tematicas`. El nombre y el correo se guardan solo en `users`; `estudiantes` y `profesores` los toman de ahí por su `user_id`, así no hay datos repetidos.
 
 El porcentaje de avance se calcula como *lecciones completadas del curso ÷ total de lecciones del curso × 100*.
 
@@ -132,7 +133,7 @@ El porcentaje de avance se calcula como *lecciones completadas del curso ÷ tota
 
 En la carpeta [`docs/`](docs):
 
-- [`Evidencias_Plan_Mejoramiento_Grupo2.pdf`](docs/Evidencias_Plan_Mejoramiento_Grupo2.pdf): diagrama relacional, normalización, mapa de navegación por rol, tabla de pruebas y capturas de pantalla.
+- [`Evidencias_Plan_Mejoramiento_Grupo2.pdf`](docs/Evidencias_Plan_Mejoramiento_Grupo2.pdf): diagrama relacional, normalización, mapa de navegación por rol, tabla de 36 pruebas y capturas de pantalla.
 - [`evidencias.html`](docs/evidencias.html): el mismo documento en HTML (se abre en el navegador).
 - [`capturas/`](docs/capturas): capturas de pantalla de cada panel.
 - [`database/habilidades.sql`](database/habilidades.sql): script SQL con la estructura y los datos de prueba.
