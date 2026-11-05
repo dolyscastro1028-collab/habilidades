@@ -33,9 +33,9 @@ class CursosTable
                 TextColumn::make('profesor.nombre')
                     ->label('Profesor'),
 
-                TextColumn::make('contenidos_count')
-                    ->counts('contenidos')
-                    ->label('Contenidos')
+                TextColumn::make('lecciones_count')
+                    ->counts('lecciones')
+                    ->label('Lecciones')
                     ->badge(),
 
                 TextColumn::make('estado')

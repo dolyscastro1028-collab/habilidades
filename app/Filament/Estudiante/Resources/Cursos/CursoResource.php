@@ -4,7 +4,6 @@ namespace App\Filament\Estudiante\Resources\Cursos;
 
 use App\Filament\Estudiante\Resources\Cursos\Pages\ListCursos;
 use App\Filament\Estudiante\Resources\Cursos\Pages\ViewCurso;
-use App\Filament\Estudiante\Resources\Cursos\RelationManagers\ContenidosRelationManager;
 use App\Filament\Estudiante\Resources\Cursos\Schemas\CursoForm;
 use App\Filament\Estudiante\Resources\Cursos\Tables\CursosTable;
 use App\Models\Curso;
@@ -75,9 +74,7 @@ class CursoResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            ContenidosRelationManager::class,
-        ];
+        return [];
     }
 
     public static function getPages(): array

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Cursos\Tables;
 
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
@@ -16,13 +17,22 @@ class CursosTable
             ->columns([
                 TextColumn::make('nombre')
                     ->searchable(),
-                TextColumn::make('duracion')
-                    ->searchable(),
                 TextColumn::make('materia')
+                    ->label('Temática')
                     ->searchable(),
-                TextColumn::make('profesor_id')
-                    ->numeric()
-                    ->sortable(),
+                TextColumn::make('duracion')
+                    ->label('Duración'),
+                TextColumn::make('profesor.nombre')
+                    ->label('Profesor')
+                    ->searchable(),
+                TextColumn::make('modulos_count')
+                    ->counts('modulos')
+                    ->label('Módulos')
+                    ->badge(),
+                TextColumn::make('lecciones_count')
+                    ->counts('lecciones')
+                    ->label('Lecciones')
+                    ->badge(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -37,6 +47,7 @@ class CursosTable
             ])
             ->recordActions([
                 EditAction::make(),
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

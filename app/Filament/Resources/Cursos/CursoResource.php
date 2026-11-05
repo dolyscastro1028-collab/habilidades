@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Cursos;
 use App\Filament\Resources\Cursos\Pages\CreateCurso;
 use App\Filament\Resources\Cursos\Pages\EditCurso;
 use App\Filament\Resources\Cursos\Pages\ListCursos;
+use App\Filament\Resources\Cursos\RelationManagers\ModulosRelationManager;
 use App\Filament\Resources\Cursos\Schemas\CursoForm;
 use App\Filament\Resources\Cursos\Tables\CursosTable;
 use App\Models\Curso;
@@ -20,6 +21,8 @@ class CursoResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
+    protected static ?string $recordTitleAttribute = 'nombre';
+
     public static function form(Schema $schema): Schema
     {
         return CursoForm::configure($schema);
@@ -33,7 +36,7 @@ class CursoResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            ModulosRelationManager::class,
         ];
     }
 

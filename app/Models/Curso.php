@@ -32,9 +32,4 @@ class Curso extends Model
     {
         return $this->hasManyThrough(Leccion::class, Modulo::class);
     }
-
-    public function contenidos()
-    {
-        return $this->hasMany(Contenido::class)->orderBy('orden');
-    }
 }

@@ -5,7 +5,7 @@
     $totalEstudiantes = \App\Models\Estudiante::count();
 
     $cursos = \App\Models\Curso::with('profesor')
-        ->withCount(['estudiantes', 'contenidos'])
+        ->withCount(['estudiantes', 'lecciones'])
         ->latest()
         ->take(6)
         ->get();
@@ -507,7 +507,7 @@
                     <span class="chip"><span class="material-symbols-rounded filled">auto_awesome</span> Inscripciones abiertas</span>
                     <h1>Aprende y enseña <span class="grad">lo que te apasiona</span></h1>
                     <p class="lead">
-                        Un solo lugar donde los profesores publican sus cursos y contenidos,
+                        Un solo lugar donde los profesores publican sus cursos con módulos y lecciones,
                         y los estudiantes se inscriben para aprender a su ritmo.
                     </p>
                     <div class="hero-actions">
@@ -694,7 +694,7 @@
                                 <div class="course-meta">
                                     <span class="meta-chip"><span class="material-symbols-rounded">schedule</span>{{ $curso->duracion }}</span>
                                     <span class="meta-chip"><span class="material-symbols-rounded">groups</span>{{ $curso->estudiantes_count }} inscritos</span>
-                                    <span class="meta-chip"><span class="material-symbols-rounded">library_books</span>{{ $curso->contenidos_count }} contenidos</span>
+                                    <span class="meta-chip"><span class="material-symbols-rounded">library_books</span>{{ $curso->lecciones_count }} lecciones</span>
                                 </div>
                             </div>
                             <div class="course-foot">

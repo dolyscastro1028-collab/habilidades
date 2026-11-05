@@ -19,6 +19,7 @@ class CursoForm
                     ->required(),
 
                 TextInput::make('materia')
+                    ->label('Temática')
                     ->required(),
             ]);
     }
