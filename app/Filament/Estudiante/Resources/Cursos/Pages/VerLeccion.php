@@ -27,7 +27,7 @@ class VerLeccion extends Page
         $this->record = $this->resolveRecord($record);
 
         // Solo estudiantes inscritos, y solo lecciones de este curso
-        abort_unless(CursoResource::canView($this->record), 403);
+        abort_unless($this->record->tieneInscrito(auth()->user()->estudiante), 403);
 
         $this->actual = $this->record->lecciones()->with('modulo')->findOrFail($leccion);
     }

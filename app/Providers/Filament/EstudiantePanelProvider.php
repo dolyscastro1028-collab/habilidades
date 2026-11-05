@@ -27,6 +27,7 @@ class EstudiantePanelProvider extends PanelProvider
             ->id('estudiante')
             ->path('estudiante')
             ->login()
+            ->profile(isSimple: false)
             ->registration(RegistroEstudiante::class)
             ->brandName('Plataforma de Habilidades')
             ->colors([

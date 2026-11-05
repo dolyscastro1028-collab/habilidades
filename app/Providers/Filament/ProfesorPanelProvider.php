@@ -26,6 +26,7 @@ class ProfesorPanelProvider extends PanelProvider
             ->id('profesor')
             ->path('profesor')
             ->login()
+            ->profile(isSimple: false)
             ->brandName('Plataforma de Habilidades · Profesor')
             ->colors([
                 'primary' => Color::Purple,
@@ -47,6 +48,11 @@ class ProfesorPanelProvider extends PanelProvider
             )
             ->widgets([
                 AccountWidget::class,
+                // Los mismos widgets del admin, filtrados a los cursos del profesor
+                \App\Filament\Widgets\ResumenPlataforma::class,
+                \App\Filament\Widgets\InscripcionesPorCurso::class,
+                \App\Filament\Widgets\ActividadReciente::class,
+                \App\Filament\Widgets\CursosPopulares::class,
             ])
             ->middleware([
                 EncryptCookies::class,

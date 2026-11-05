@@ -9,10 +9,28 @@ class Curso extends Model
     protected $fillable = [
         'nombre',
         'duracion',
-        'materia',
+        'descripcion',
+        'tematica_id',
         'profesor_id',
         'portada',
     ];
+
+    public function tematica()
+    {
+        return $this->belongsTo(Tematica::class);
+    }
+
+    // ¿Este estudiante está inscrito en el curso?
+    public function tieneInscrito(?Estudiante $estudiante): bool
+    {
+        if (! $estudiante) {
+            return false;
+        }
+
+        return $this->relationLoaded('estudiantes')
+            ? $this->estudiantes->contains('id', $estudiante->id)
+            : $this->estudiantes()->whereKey($estudiante->id)->exists();
+    }
 
     public function profesor()
     {

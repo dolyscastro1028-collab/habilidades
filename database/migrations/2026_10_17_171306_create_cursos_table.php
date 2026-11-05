@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('nombre');
             $table->string('duracion');
-            $table->string('materia');
+            $table->text('descripcion')->nullable(); // qué va a aprender el estudiante
+            $table->foreignId('tematica_id')->constrained('tematicas')->restrictOnDelete();
             $table->string('portada')->nullable(); // imagen del curso (opcional)
             $table->foreignId('profesor_id')->constrained('profesores')->cascadeOnDelete();
             $table->timestamps();

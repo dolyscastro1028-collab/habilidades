@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Curso;
 use App\Models\Role;
+use App\Models\Tematica;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -41,9 +42,14 @@ class DatabaseSeeder extends Seeder
             'edad' => $e[3],
         ]));
 
+        // ── Temáticas ────────────────────────────────────────────────────
+        $tematicas = collect(['Ofimática', 'Programación', 'Diseño gráfico', 'Idiomas'])
+            ->mapWithKeys(fn ($nombre) => [$nombre => Tematica::create(['nombre' => $nombre])->id]);
+
         // ── Cursos → módulos → lecciones ─────────────────────────────────
         $cursos = [
-            ['Excel básico', 'Ofimática', '20 horas', [
+            ['Excel básico', 'Ofimática', '20 horas',
+                'Aprende a usar Excel desde cero: escribe fórmulas, usa funciones como SUMA y PROMEDIO y presenta tus datos con gráficos claros.', [
                 'Fórmulas' => [
                     'Introducción a las fórmulas' => 'https://www.youtube.com/watch?v=9KiXJtMrmbc',
                     'Funciones SUMA y PROMEDIO' => 'https://www.youtube.com/watch?v=LW0B8hgreeo',
@@ -53,7 +59,8 @@ class DatabaseSeeder extends Seeder
                     'Personalizar gráficos' => 'https://www.youtube.com/watch?v=ZN_IjSk0tw8',
                 ],
             ]],
-            ['Programación con Python', 'Programación', '30 horas', [
+            ['Programación con Python', 'Programación', '30 horas',
+                'Da tus primeros pasos en programación con Python: variables, entrada y salida de datos, condicionales y ciclos con ejemplos prácticos.', [
                 'Fundamentos' => [
                     'Variables y tipos de datos' => 'https://www.youtube.com/watch?v=gF62RDGpW1k',
                     'Entrada y salida' => 'https://www.youtube.com/watch?v=EXno9AKikDo',
@@ -65,10 +72,11 @@ class DatabaseSeeder extends Seeder
             ]],
         ];
 
-        foreach ($cursos as [$nombre, $materia, $duracion, $modulos]) {
+        foreach ($cursos as [$nombre, $tematica, $duracion, $descripcion, $modulos]) {
             $curso = Curso::create([
                 'nombre' => $nombre,
-                'materia' => $materia, // temática del curso
+                'tematica_id' => $tematicas[$tematica],
+                'descripcion' => $descripcion,
                 'duracion' => $duracion,
                 'profesor_id' => $profesor->id,
             ]);
@@ -98,7 +106,11 @@ class DatabaseSeeder extends Seeder
         $andres->cursos()->attach($excel->id);
         // Sofía queda sin inscripciones para mostrar la inscripción en vivo
 
-        // Laura completó 2 de 4 lecciones de Excel (50 %)
-        $laura->leccionesCompletadas()->attach($excel->lecciones()->orderBy('lecciones.id')->limit(2)->pluck('lecciones.id'));
+        // Laura completó 2 de 4 lecciones de Excel (50 %), hace 5 y hace 2 días
+        $excel->lecciones()->orderBy('lecciones.id')->limit(2)->pluck('lecciones.id')
+            ->each(fn ($id, $i) => $laura->leccionesCompletadas()->attach($id, [
+                'created_at' => now()->subDays([5, 2][$i]),
+                'updated_at' => now()->subDays([5, 2][$i]),
+            ]));
     }
 }

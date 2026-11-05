@@ -18,7 +18,7 @@ class MisCursosWidget extends Widget
     {
         $estudiante = auth()->user()->estudiante;
 
-        $cursos = $estudiante->cursos()->with('profesor.user')->get()->map(function ($curso) use ($estudiante) {
+        $cursos = $estudiante->cursos()->with(['profesor.user', 'tematica'])->get()->map(function ($curso) use ($estudiante) {
             $siguiente = $estudiante->siguienteLeccion($curso);
 
             return [

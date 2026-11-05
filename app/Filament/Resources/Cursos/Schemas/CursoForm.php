@@ -6,6 +6,7 @@ use App\Models\Profesor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Schema;
 
 class CursoForm
@@ -17,9 +18,27 @@ class CursoForm
                 TextInput::make('nombre')
                     ->required(),
 
-                TextInput::make('materia')
+                Select::make('tematica_id')
                     ->label('Temática')
-                    ->required(),
+                    ->relationship('tematica', 'nombre')
+                    ->searchable()
+                    ->preload()
+                    ->required()
+                    // Permite crear una temática nueva sin salir del formulario
+                    ->createOptionForm([
+                        TextInput::make('nombre')
+                            ->label('Nombre de la temática')
+                            ->required()
+                            ->unique('tematicas', 'nombre')
+                            ->maxLength(100),
+                    ]),
+
+                Textarea::make('descripcion')
+                    ->label('Descripción')
+                    ->helperText('Qué va a aprender el estudiante. Se muestra en el catálogo y en la vista previa del curso.')
+                    ->rows(3)
+                    ->maxLength(1000)
+                    ->columnSpanFull(),
 
                 TextInput::make('duracion')
                     ->label('Duración')

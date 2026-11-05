@@ -31,7 +31,7 @@
 
         <span style="position: absolute; top: 0.75rem; left: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 9999px;
                      background: rgba(0,0,0,0.55); color: #fff; font-size: 0.75rem; font-weight: 600;">
-            {{ $curso->materia }}
+            {{ $curso->tematica?->nombre }}
         </span>
 
         @if ($inscrito)
@@ -48,6 +48,12 @@
         <p style="font-size: 0.875rem; opacity: 0.75; margin-top: 0.15rem;">
             {{ $curso->profesor?->nombre ?? 'Sin profesor' }}
         </p>
+        @if (filled($curso->descripcion))
+            {{-- máximo 2 líneas en la tarjeta; completa en la vista del curso --}}
+            <p style="font-size: 0.85rem; opacity: 0.85; margin-top: 0.4rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                {{ $curso->descripcion }}
+            </p>
+        @endif
     </div>
 
     <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; font-size: 0.8rem; opacity: 0.8;">

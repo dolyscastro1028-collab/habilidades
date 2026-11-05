@@ -24,7 +24,7 @@
                                 @endif
                             </div>
                             <p style="font-size: 0.875rem; opacity: 0.75;">
-                                {{ $curso->materia }} · {{ $curso->profesor?->nombre }}
+                                {{ $curso->tematica?->nombre }} · {{ $curso->profesor?->nombre }}
                             </p>
                         </div>
 

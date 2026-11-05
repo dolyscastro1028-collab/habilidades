@@ -9,6 +9,7 @@ use Filament\Actions\ViewAction;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\ViewColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class CursosTable
@@ -17,16 +18,21 @@ class CursosTable
     {
         // ¿El estudiante logueado ya está inscrito en este curso?
         // (usa la relación ya cargada en la consulta del catálogo)
-        $inscrito = fn (Curso $record): bool => $record->estudiantes->contains('id', auth()->user()->estudiante?->id);
+        $inscrito = fn (Curso $record): bool => $record->tieneInscrito(auth()->user()->estudiante);
 
         return $table
             // Catálogo en tarjetas: una tarjeta por curso, 1 / 2 / 3 por fila según la pantalla
             ->modifyQueryUsing(fn ($query) => $query
-                ->with(['profesor.user', 'estudiantes'])
+                ->with(['profesor.user', 'estudiantes', 'tematica'])
                 ->withCount(['modulos', 'lecciones']))
             ->contentGrid(['md' => 2, 'xl' => 3])
-            ->searchable(['nombre', 'materia'])
-            ->searchPlaceholder('Buscar por nombre o temática')
+            ->searchable(['nombre', 'descripcion'])
+            ->searchPlaceholder('Buscar curso')
+            ->filters([
+                SelectFilter::make('tematica')
+                    ->label('Temática')
+                    ->relationship('tematica', 'nombre'),
+            ])
             ->paginated([12, 24])
             // Stack activa el modo tarjetas de Filament (sin él, contentGrid se ignora y sale una tabla)
             ->columns([
@@ -35,12 +41,11 @@ class CursosTable
                         ->view('filament.estudiante.tarjeta-curso'),
                 ]),
             ])
-            // Clic en la tarjeta: entra al curso si está inscrito
-            ->recordUrl(fn (Curso $record) => $inscrito($record) ? CursoResource::getUrl('view', ['record' => $record]) : null)
+            // Clic en la tarjeta: abre el curso (vista previa si no está inscrito)
+            ->recordUrl(fn (Curso $record) => CursoResource::getUrl('view', ['record' => $record]))
             ->recordActions([
-                // Solo aparece si está inscrito (lo controla canView)
                 ViewAction::make()
-                    ->label('Ver contenido')
+                    ->label(fn (Curso $record) => $inscrito($record) ? 'Ver contenido' : 'Ver detalles')
                     ->icon('heroicon-o-book-open'),
 
                 Action::make('inscribirse')

@@ -4,7 +4,7 @@
     $totalProfesores  = \App\Models\Profesor::count();
     $totalEstudiantes = \App\Models\Estudiante::count();
 
-    $cursos = \App\Models\Curso::with('profesor.user')
+    $cursos = \App\Models\Curso::with(['profesor.user', 'tematica'])
         ->withCount(['estudiantes', 'lecciones'])
         ->latest()
         ->take(6)
@@ -646,7 +646,7 @@
                         <span class="material-symbols-rounded big">travel_explore</span>
                         <div class="step-num">2</div>
                         <h4>Explora</h4>
-                        <p>Revisa los cursos disponibles, su materia y su profesor.</p>
+                        <p>Revisa los cursos disponibles, su temática y su profesor.</p>
                     </div>
                     <div class="step reveal">
                         <span class="material-symbols-rounded big">add_task</span>
@@ -682,7 +682,7 @@
                         @endphp
                         <article class="course reveal">
                             <div class="course-cover acc-{{ $acento }}">
-                                <span class="tag">{{ $curso->materia }}</span>
+                                <span class="tag">{{ $curso->tematica?->nombre }}</span>
                                 <span class="material-symbols-rounded filled">{{ $icono }}</span>
                             </div>
                             <div class="course-body">

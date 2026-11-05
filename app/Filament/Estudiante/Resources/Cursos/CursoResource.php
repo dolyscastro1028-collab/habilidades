@@ -5,7 +5,6 @@ namespace App\Filament\Estudiante\Resources\Cursos;
 use App\Filament\Estudiante\Resources\Cursos\Pages\ListCursos;
 use App\Filament\Estudiante\Resources\Cursos\Pages\VerLeccion;
 use App\Filament\Estudiante\Resources\Cursos\Pages\ViewCurso;
-use App\Filament\Estudiante\Resources\Cursos\Schemas\CursoForm;
 use App\Filament\Estudiante\Resources\Cursos\Tables\CursosTable;
 use App\Models\Curso;
 use BackedEnum;
@@ -44,17 +43,16 @@ class CursoResource extends Resource
         return false;
     }
 
-    // Solo puede ver el curso (y su contenido) si está inscrito
+    // Cualquier estudiante ve la vista previa del curso (descripción y temario).
+    // Las lecciones solo se abren estando inscrito (lo controla VerLeccion).
     public static function canView(Model $record): bool
     {
-        return $record->estudiantes()
-            ->whereKey(auth()->user()->estudiante?->id)
-            ->exists();
+        return true;
     }
 
     public static function form(Schema $schema): Schema
     {
-        return CursoForm::configure($schema);
+        return $schema; // el estudiante no crea ni edita cursos
     }
 
     // Datos del curso que se muestran arriba al entrar
@@ -62,19 +60,29 @@ class CursoResource extends Resource
     {
         return $schema
             ->components([
-                TextEntry::make('nombre'),
-                TextEntry::make('materia')->label('Temática'),
+                TextEntry::make('descripcion')
+                    ->hiddenLabel()
+                    ->placeholder('Este curso aún no tiene descripción.')
+                    ->columnSpanFull(),
+
+                TextEntry::make('tematica.nombre')->label('Temática')->badge(),
                 TextEntry::make('duracion')->label('Duración'),
                 TextEntry::make('profesor.user.name')->label('Profesor'),
+                TextEntry::make('lecciones_count')
+                    ->label('Contenido')
+                    ->state(fn (Curso $record) => $record->modulos()->count() . ' módulos · ' . $record->lecciones()->count() . ' lecciones'),
 
+                // Solo para inscritos
                 TextEntry::make('progreso')
                     ->label('Mi progreso')
-                    ->state(fn (Curso $record) => auth()->user()->estudiante->progresoTexto($record)),
+                    ->state(fn (Curso $record) => auth()->user()->estudiante->progresoTexto($record))
+                    ->visible(fn (Curso $record) => $record->tieneInscrito(auth()->user()->estudiante)),
 
                 ViewEntry::make('barra')
                     ->hiddenLabel()
                     ->state(fn (Curso $record) => auth()->user()->estudiante->progresoEn($record)['porcentaje'])
-                    ->view('filament.barra-progreso'),
+                    ->view('filament.barra-progreso')
+                    ->visible(fn (Curso $record) => $record->tieneInscrito(auth()->user()->estudiante)),
 
                 ViewEntry::make('modulos')
                     ->hiddenLabel()

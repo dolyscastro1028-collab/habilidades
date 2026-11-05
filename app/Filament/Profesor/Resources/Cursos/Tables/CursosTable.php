@@ -7,6 +7,7 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class CursosTable
@@ -17,8 +18,9 @@ class CursosTable
             ->columns([
                 TextColumn::make('nombre')
                     ->searchable(),
-                TextColumn::make('materia')
+                TextColumn::make('tematica.nombre')
                     ->label('Temática')
+                    ->badge()
                     ->searchable(),
                 TextColumn::make('duracion')
                     ->label('Duración'),
@@ -40,7 +42,9 @@ class CursosTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('tematica')
+                    ->label('Temática')
+                    ->relationship('tematica', 'nombre'),
             ])
             ->recordActions([
                 EditAction::make(),
