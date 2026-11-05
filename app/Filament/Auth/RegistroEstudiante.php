@@ -2,6 +2,7 @@
 
 namespace App\Filament\Auth;
 
+use App\Models\Role;
 use Filament\Auth\Pages\Register;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
@@ -38,7 +39,7 @@ class RegistroEstudiante extends Register
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => $data['password'],
-            'role' => 'estudiante',
+            'role_id' => Role::idDe('estudiante'),
         ]);
 
         // 2. Crea el registro en la tabla estudiantes

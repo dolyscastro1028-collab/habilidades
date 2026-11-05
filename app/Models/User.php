@@ -16,7 +16,7 @@ class User extends Authenticatable implements FilamentUser
         'name',
         'email',
         'password',
-        'role',
+        'role_id',
     ];
 
     protected $hidden = [
@@ -35,7 +35,12 @@ class User extends Authenticatable implements FilamentUser
     // Cada usuario solo entra al panel que coincide con su rol
     public function canAccessPanel(Panel $panel): bool
     {
-        return $this->role === $panel->getId();
+        return $this->role?->nombre === $panel->getId();
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
     }
 
     public function profesor()

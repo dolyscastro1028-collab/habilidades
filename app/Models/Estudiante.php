@@ -22,4 +22,9 @@ class Estudiante extends Model
     {
         return $this->belongsToMany(Curso::class, 'clases')->withTimestamps();
     }
+
+    public function leccionesCompletadas()
+    {
+        return $this->belongsToMany(Leccion::class, 'progreso')->withTimestamps();
+    }
 }
