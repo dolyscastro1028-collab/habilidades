@@ -6,6 +6,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -42,6 +43,17 @@ class AdminPanelProvider extends PanelProvider
             )
             ->pages([
                 Pages\Dashboard::class,
+            ])
+            // Documento del plan de mejoramiento (carpeta docs/)
+            ->navigationItems([
+                NavigationItem::make('Evidencias')
+                    ->url(fn () => route('evidencias'), shouldOpenInNewTab: true)
+                    ->icon('heroicon-o-document-chart-bar')
+                    ->sort(10),
+                NavigationItem::make('Evidencias (PDF)')
+                    ->url(fn () => route('evidencias', 'Evidencias_Plan_Mejoramiento_Grupo2.pdf'), shouldOpenInNewTab: true)
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->sort(11),
             ])
             ->discoverWidgets(
                 in: app_path('Filament/Widgets'),

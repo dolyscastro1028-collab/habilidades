@@ -316,7 +316,9 @@ docs/                     Evidencias del plan de mejoramiento
 
 ## Evidencias
 
-En la carpeta [`docs/`](docs):
+Dentro de la aplicación, el **administrador** las abre desde el menú lateral de `/admin`: **Evidencias** (página web) y **Evidencias (PDF)**. También se pueden abrir en `/evidencias` estando con la sesión del administrador.
+
+Los archivos están en la carpeta [`docs/`](docs):
 
 - [`Evidencias_Plan_Mejoramiento_Grupo2.pdf`](docs/Evidencias_Plan_Mejoramiento_Grupo2.pdf): diagrama relacional, normalización, mapa de navegación por rol, tabla de 46 pruebas y capturas de pantalla.
 - [`evidencias.html`](docs/evidencias.html): el mismo documento en HTML (se abre en el navegador).
