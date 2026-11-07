@@ -327,6 +327,7 @@ En la carpeta [`docs/`](docs):
 
 | Problema | Solución |
 |---|---|
+| `Table 'habilidades.roles' doesn't exist` u otra tabla o columna que no existe | La base se creó con una versión anterior del proyecto. Ejecutar `php artisan migrate:fresh --seed` (borra los datos y crea todo de nuevo). |
 | `could not find driver` | Activar la extensión `pdo_mysql` en `php.ini`. |
 | `Access denied for user 'root'` | Revisar `DB_USERNAME` y `DB_PASSWORD` en `.env`. |
 | `Unknown database 'habilidades'` | Crear la base de datos (paso 4). |
